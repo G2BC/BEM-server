@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('type');
             $table->char('state_acronym', 2);
             $table->string('state_name', 255);
-            $table->string('biome', 255);
+            $table->string('biome', 255)->nullable();
             $table->string('literature_reference', 255)->nullable();
             $table->double('latitude', 10,8)->nullable();
             $table->double('longitude', 11,8)->nullable();
