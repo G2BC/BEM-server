@@ -36,7 +36,7 @@ class Occurrence extends Model
 	protected $table = 'occurrence';
 
 	protected $casts = [
-		'uuid' => 'uuid',
+		'uuid' => 'string',
 		'inaturalist_taxa' => 'int',
 		'specieslink_id' => 'int',
 		'type' => 'int',
@@ -59,8 +59,8 @@ class Occurrence extends Model
 
 	protected $guarded = ['id'];
 
-	public function fungis() 
+	public function fungis()
 	{
-		return $this->belongsToMany('fungi')->using('fungi_occurrence');
+		return $this->belongsToMany(Fungi::class)->using(FungiOccurrence::class);
 	}
 }

@@ -67,6 +67,6 @@ class Fungi extends Model
 
 	public function occurrences() 
 	{
-		return $this->belongsToMany('occurrence')->using('fungi_occurrence');
+		return $this->belongsToMany(Occurrence::class)->using(FungiOccurrence::class);
 	}
 }
