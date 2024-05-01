@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class Fungus
+ * Class Fungi
  * 
  * @property int $id
  * @property uuid $uuid
@@ -34,13 +34,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @package App\Models
  */
-class Fungus extends Model
+class Fungi extends Model
 {
 	use SoftDeletes;
 	protected $table = 'fungi';
 
 	protected $casts = [
-		'uuid' => 'uuid',
+		'uuid' => 'string',
 		'inaturalist_taxa' => 'int',
 		'bem' => 'int',
 		'threatened' => 'int'
