@@ -63,6 +63,8 @@ class Fungus extends Model
 		'description'
 	];
 
+	protected $guarded = ['id'];
+
 	public function occurrences() 
 	{
 		return $this->belongsToMany('occurrence')->using('fungi_occurrence');

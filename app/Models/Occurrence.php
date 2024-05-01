@@ -57,6 +57,8 @@ class Occurrence extends Model
 		'longitude'
 	];
 
+	protected $guarded = ['id'];
+
 	public function fungis() 
 	{
 		return $this->belongsToMany('fungi')->using('fungi_occurrence');

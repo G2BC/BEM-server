@@ -36,4 +36,7 @@ class FungiOccurrence extends Pivot
 		'fungi_id',
 		'occurrence_id'
 	];
+
+	protected $guarded = ['id'];
+
 }
