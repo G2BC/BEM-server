@@ -47,61 +47,70 @@ class RegisterFungiOccurences extends Command
         $reader->setLoadSheetsOnly(['BEM', 'Literature_Ocurrence']);
 
         $spreadsheet = $reader->load($filePath);
-        $fungisSheet = $spreadsheet->getSheetByName('BEM');
-        $occurrencesSheet = $spreadsheet->getSheetByName('Literature_Ocurrence');
+        $fungisCollection = collect($spreadsheet->getSheetByName('BEM')->toArray());
+        $occurrencesCollection = collect($spreadsheet->getSheetByName('Literature_Ocurrence')->toArray());
 
         $this->info('Iniciando importação para o banco.');
         $bar = $this->output->createProgressBar($sheetsInfo[0]['totalRows']);
         $bar->start();
 
-        for ($row = 2; $row <= $sheetsInfo[0]['totalRows']; $row++) {
-            $fungiLineId = $fungisSheet->getCell("A{$row}")->getValue();
+        $fungisCollection->splice(1)->each(function ($fungiRow) use ($occurrencesCollection, $bar) {
+            $fungiLineId = $fungiRow[0];
 
-            if (Fungi::where('inaturalist_taxa', $fungisSheet->getCell("L{$row}")->getValue())->doesntexist()) {
+            if (Fungi::where('inaturalist_taxa', $fungiRow[11])->doesntexist()) {
                 try {
                     DB::beginTransaction();
                     $fungiModel = Fungi::updateOrCreate(
-                        ['inaturalist_taxa' => $fungisSheet->getCell("L{$row}")->getValue()],
+                        ['inaturalist_taxa' => $fungiRow[11]],
                         [
                             'uuid' => Str::uuid(),
-                            'kingdom' => $fungisSheet->getCell("B{$row}")->getValue(),
-                            'phylum' => $fungisSheet->getCell("C{$row}")->getValue(),
-                            'class' => $fungisSheet->getCell("D{$row}")->getValue(),
-                            'order' => $fungisSheet->getCell("E{$row}")->getValue(),
-                            'family' => $fungisSheet->getCell("F{$row}")->getValue(),
-                            'genus' => $fungisSheet->getCell("G{$row}")->getValue(),
-                            'specie' => $fungisSheet->getCell("H{$row}")->getValue(),
-                            'scientific_name' => ($fungisSheet->getCell("G{$row}")->getValue() . ' ' . $fungisSheet->getCell("H{$row}")->getValue()),
-                            'inaturalist_taxa' => $fungisSheet->getCell("L{$row}")->getValue(),
-                            'popular_name' => $fungisSheet->getCell("M{$row}")->getValue(),
-                            'bem' => BemClassification::getValueByName($fungisSheet->getCell("N{$row}")->getValue()),
+                            'kingdom' => trim($fungiRow[1]),
+                            'phylum' => trim($fungiRow[2]),
+                            'class' => trim($fungiRow[3]),
+                            'order' => trim($fungiRow[4]),
+                            'family' => trim($fungiRow[5]),
+                            'genus' => trim($fungiRow[6]),
+                            'specie' => trim($fungiRow[7]),
+                            'scientific_name' => (trim($fungiRow[6]) . ' ' . trim($fungiRow[7])),
+                            'inaturalist_taxa' => $fungiRow[11],
+                            'popular_name' => trim($fungiRow[12]),
+                            'bem' => BemClassification::getValueByName(trim($fungiRow[13])),
                             'threatened' => null,
                             'description' => null
                         ]
                     );
 
-                    //FIX: $row não corresponde ao mesmo registro entre pastas
-                    $statesAcr = explode(',', ($occurrencesSheet->getCell("B{$row}")->getValue()));
+                    $fungiOccurrences = $occurrencesCollection->filter(function ($occurrenceRow) use ($fungiLineId) {
 
+                        return $occurrenceRow[0] == $fungiLineId;
+                    });
                     $occurrencesIds = collect([]);
-                    foreach ($statesAcr as $acr) {
-                        $occurrence = Occurrence::create(
-                            [
-                                'uuid' => Str::uuid(),
-                                'inaturalist_taxa' => null,
-                                'specieslink_id' => null,
-                                'type' => is_null($fungisSheet->getCell("N{$row}")->getValue()) ? null : OccurrenceTypes::Literature->value,
-                                'state_acronym' => trim($acr),
-                                'state_name' => StatesAcronyms::getStateByAcronym(trim($acr)),
-                                'biome' => $occurrencesSheet->getCell("C{$row}")->getValue(),
-                                'literature_reference' => null,
-                                'latitude' => null,
-                                'longitude' => null
-                            ]
-                        );
 
-                        $occurrencesIds->add($occurrence->id);
-                    }
+                    $fungiOccurrences->each(function ($occurrence) use ($fungiRow, $occurrencesIds) {
+                        $statesAcr = explode(',', ($occurrence[1]));
+
+                        foreach ($statesAcr as $acr) {
+
+                            if (Str::length(trim($acr)) == 2) {
+                                $occurrence = Occurrence::create(
+                                    [
+                                        'uuid' => Str::uuid(),
+                                        'inaturalist_taxa' => null,
+                                        'specieslink_id' => null,
+                                        'type' => is_null($fungiRow[8]) ? null : OccurrenceTypes::Literature->value,
+                                        'state_acronym' => strtoupper(trim($acr)),
+                                        'state_name' => StatesAcronyms::getStateByAcronym(strtoupper(trim($acr))),
+                                        'biome' => trim($occurrence[2]),
+                                        'literature_reference' => null,
+                                        'latitude' => null,
+                                        'longitude' => null
+                                    ]
+                                );
+
+                                $occurrencesIds->add($occurrence->id);
+                            }
+                        }
+                    });
 
                     $fungiModel->occurrences()->syncWithoutDetaching($occurrencesIds->toArray());
 
@@ -113,7 +122,7 @@ class RegisterFungiOccurences extends Command
                     $this->error($th->getMessage());
                 }
             }
-        }
+        });
         $bar->finish();
     }
 }
