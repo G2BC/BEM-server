@@ -9,8 +9,10 @@ use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use App\Utils\CustomSheetReader;
 use App\Utils\Enums\BemClassification;
+use App\Utils\Enums\RedListClassification;
 use App\Utils\Enums\OccurrenceTypes;
 use App\Utils\Enums\StatesAcronyms;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 
 class RegisterFungiOccurences extends Command
@@ -50,15 +52,26 @@ class RegisterFungiOccurences extends Command
         $fungisCollection = collect($spreadsheet->getSheetByName('BEM')->toArray());
         $occurrencesCollection = collect($spreadsheet->getSheetByName('Literature_Ocurrence')->toArray());
 
+        $client = new Client();
+        $apiKey = '9bb4facb6d23f48efbf424bb05c0c1ef1cf6f468393bc745d42179ac4aca5fee'; //Chave de API da IUCN
+
         $this->info('Iniciando importação para o banco.');
         $bar = $this->output->createProgressBar($sheetsInfo[0]['totalRows']);
         $bar->start();
 
-        $fungisCollection->splice(1)->each(function ($fungiRow) use ($occurrencesCollection, $bar) {
+        $fungisCollection->splice(1)->each(function ($fungiRow) use ($occurrencesCollection, $bar, $client, $apiKey) {
             $fungiLineId = $fungiRow[0];
 
             if (Fungi::where('inaturalist_taxa', $fungiRow[11])->doesntexist()) {
                 try {
+                    $genus = Str::lower(trim($fungiRow[6]));
+                    $specie = trim($fungiRow[7]);
+
+                    $response = $client->get("https://apiv3.iucnredlist.org/api/v3/species/{$genus}%20{$specie}?token={$apiKey}");
+                    $data = json_decode($response->getBody()->getContents(), true);
+
+                    $iucnData = array_key_exists('result', $data) ? collect($data['result']) : collect();
+
                     DB::beginTransaction();
                     $fungiModel = Fungi::updateOrCreate(
                         ['inaturalist_taxa' => $fungiRow[11]],
@@ -70,12 +83,12 @@ class RegisterFungiOccurences extends Command
                             'order' => trim($fungiRow[4]),
                             'family' => trim($fungiRow[5]),
                             'genus' => trim($fungiRow[6]),
-                            'specie' => trim($fungiRow[7]),
-                            'scientific_name' => (trim($fungiRow[6]) . ' ' . trim($fungiRow[7])),
+                            'specie' => $specie,
+                            'scientific_name' => (trim($fungiRow[6]) . ' ' . $specie),
                             'inaturalist_taxa' => $fungiRow[11],
                             'popular_name' => trim($fungiRow[12]),
                             'bem' => BemClassification::getValueByName(trim($fungiRow[13])),
-                            'threatened' => null,
+                            'threatened' => $iucnData->isEmpty() ? RedListClassification::NA->value : RedListClassification::getValueByName($iucnData->shift()['category']),
                             'description' => null
                         ]
                     );
