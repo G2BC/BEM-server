@@ -5,6 +5,7 @@ namespace App\Repositories;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 
 class BaseRepository
 {
@@ -28,57 +29,57 @@ class BaseRepository
         return $this->query->where('uuid', $uuid);
     }
 
-    protected function findId(int $id)
+    protected function findId(int $id): Model
     {
         return $this->query->find($id);
     }
 
-    protected function findUuid(string $uuid)
+    protected function findUuid(string $uuid): Model
     {
         return $this->query->where('uuid', $uuid)->first();
     }
 
-    protected function ilike(string $fieldName, $value)
+    protected function ilike(string $fieldName, $value): Builder
     {
         return $this->query->where($fieldName, 'LIKE', $value);
     }
 
-    protected function where(string $fieldName, $value, $operator = '=')
+    protected function where(string $fieldName, $value, $operator = '='): Builder
     {
         return $this->query->where($fieldName, $operator, $value);
     }
 
-    protected function orWhere(string $fieldName, $value, $operator = '=')
+    protected function orWhere(string $fieldName, $value, $operator = '='): Builder
     {
         return $this->query->orWhere($fieldName, $operator, $value);
     }
 
-    protected function orLike(string $fieldName, $value)
+    protected function orLike(string $fieldName, $value): Builder
     {
         return $this->orWhere($fieldName, $value, 'LIKE');
     }
 
-    protected function greaterOrEqualDate(string $fieldName, string|Carbon $date)
+    protected function greaterOrEqualDate(string $fieldName, string|Carbon $date): Builder
     {
         return $this->query->whereDate($fieldName, $date);
     }
 
-    protected function betweenDates(string $fieldName, string|Carbon $firstDate, string|Carbon $lastDate)
+    protected function betweenDates(string $fieldName, string|Carbon $firstDate, string|Carbon $lastDate): Builder
     {
         return $this->greaterOrEqualDate($fieldName, $firstDate)->lessOrEqualDate($fieldName, $lastDate);
     }
 
-    protected function lessOrEqualDate(string $fieldName, string|Carbon $date)
+    protected function lessOrEqualDate(string $fieldName, string|Carbon $date): Builder
     {
         return $this->query->whereDate($fieldName, $date);
     }
 
-    protected function get(array $columns = ['*'])
+    public function get(array $columns = ['*']): Collection
     {
         return $this->query->get($columns);
     }
 
-    protected function all(array $columns = ['*'])
+    public function all(array $columns = ['*']): Collection
     {
         return $this->model->all($columns);
     }
