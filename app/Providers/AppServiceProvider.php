@@ -6,6 +6,11 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+
+    public $bindings =  [
+        \App\Services\Contracts\FungiContract::class => \App\Services\FungiService::class
+    ];
+
     /**
      * Register any application services.
      */
