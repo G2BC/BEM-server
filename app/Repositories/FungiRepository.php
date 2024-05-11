@@ -11,7 +11,7 @@ class FungiRepository extends BaseRepository
         $this->model = Fungi::class;
     }
 
-    public function find(int|string $key)
+    public function find(int|string $key): Fungi
     {
         if (is_int($key)) {
 
@@ -22,65 +22,133 @@ class FungiRepository extends BaseRepository
         }
     }
 
-    public function specieLike(string $specie)
+    public function specieLike(string $specie, string $boolOperator = 'and')
     {
-        return $this->ilike('specie', $specie);
+        if ($boolOperator == 'or') {
+            $this->orLike('specie', $specie);
+        } else {
+
+            $this->ilike('specie', $specie);
+        }
+        return $this;
     }
 
-    public function popularNameLike(string $name)
+    public function popularNameLike(string $name, string $boolOperator = 'and')
     {
-        return $this->ilike('popular_name', $name);
+        if ($boolOperator == 'or') {
+            $this->orLike('popular_name', $name);
+        } else {
+
+            $this->ilike('popular_name', $name);
+        }
+
+        return $this;
     }
 
-    public function kingdomLike(string $kingdom)
+    public function kingdomLike(string $kingdom, string $boolOperator = 'and')
     {
-        return $this->ilike('kingdom', $kingdom);
+        if ($boolOperator == 'or') {
+            $this->orLike('kingdom', $kingdom);
+        } else {
+
+            $this->ilike('kingdom', $kingdom);
+        }
+
+        return $this;
     }
 
-    public function phylumLike(string $phylum)
+    public function phylumLike(string $phylum, string $boolOperator = 'and')
     {
-        return $this->ilike('phylum', $phylum);
+        if ($boolOperator == 'or') {
+            $this->orLike('phylum', $phylum);
+        } else {
+
+            $this->ilike('phylum', $phylum);
+        }
+
+        return $this;
     }
 
-    public function classLike(string $class)
+    public function classLike(string $class, string $boolOperator = 'and')
     {
-        return $this->ilike('class', $class);
+        if ($boolOperator == 'or') {
+            $this->orLike('class', $class);
+        } else {
+
+            $this->ilike('class', $class);
+        }
+
+        return $this;
     }
 
-    public function orderLike(string $order)
+    public function orderLike(string $order, string $boolOperator = 'and')
     {
-        return $this->ilike('order', $order);
+        if ($boolOperator == 'or') {
+            $this->orLike('order', $order);
+        } else {
+
+            $this->ilike('order', $order);
+        }
+
+        return $this;
     }
 
-    public function familyLike(string $family)
+    public function familyLike(string $family, string $boolOperator = 'and')
     {
-        return $this->ilike('family', $family);
+        if ($boolOperator == 'or') {
+            $this->orLike('family', $family);
+        } else {
+
+            $this->ilike('family', $family);
+        }
+
+        return $this;
     }
 
-    public function genusLike(string $genus)
+    public function genusLike(string $genus, string $boolOperator = 'and')
     {
-        return $this->ilike('genus', $genus);
+        if ($boolOperator == 'or') {
+            $this->orLike('genus', $genus);
+        } else {
+
+            $this->ilike('genus', $genus);
+        }
+
+        return $this;
     }
 
-    public function scientificNameLike(string $name)
+    public function scientificNameLike(string $name, string $boolOperator = 'and')
     {
-        return $this->ilike('scientific_name', $name);
+        if ($boolOperator == 'or') {
+            $this->orLike('scientific_name', $name);
+        } else {
+
+            $this->ilike('scientific_name', $name);
+        }
+
+        return $this;
     }
 
     public function getByStateAcronym(string $ac)
     {
 
-        return $this->where('state_acronym', $ac);
+        $this->where('state_acronym', $ac);
+
+        return $this;
     }
 
     public function getByBiome(string $biome)
     {
 
-        return $this->where('biome', $biome);
+        $this->where('biome', $biome);
+
+        return $this;
     }
 
     public function getByBem(int $bem)
     {
-        return $this->where('bem', $bem);
+        $this->where('bem', $bem);
+
+        return $this;
     }
 }
