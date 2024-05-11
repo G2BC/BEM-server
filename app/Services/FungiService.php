@@ -41,14 +41,14 @@ class FungiService implements FungiContract
         try {
 
             $data = $this->repo->specieLike($taxonomy)
-                ->popularNameLike($taxonomy)
-                ->kingdomLike($taxonomy)
-                ->phylumLike($taxonomy)
-                ->classLike($taxonomy)
-                ->orderLike($taxonomy)
-                ->familyLike($taxonomy)
-                ->genusLike($taxonomy)
-                ->scientificNameLike($taxonomy);
+                ->popularNameLike($taxonomy, 'or')
+                ->kingdomLike($taxonomy, 'or')
+                ->phylumLike($taxonomy, 'or')
+                ->classLike($taxonomy, 'or')
+                ->orderLike($taxonomy, 'or')
+                ->familyLike($taxonomy, 'or')
+                ->genusLike($taxonomy, 'or')
+                ->scientificNameLike($taxonomy, 'or');
 
             if (!is_null($occurrenceStateAcronym)) {
                 $data->getByStateAcronym($occurrenceStateAcronym);
