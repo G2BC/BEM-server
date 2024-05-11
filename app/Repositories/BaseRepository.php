@@ -2,12 +2,14 @@
 
 namespace App\Repositories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Builder;
 
 class BaseRepository
 {
     protected Model $model;
-    protected $query;
+    protected Builder $query;
 
     public function __construct(
         Model $model
@@ -38,7 +40,7 @@ class BaseRepository
 
     protected function ilike(string $fieldName, $value)
     {
-        return $this->query->where($fieldName, 'ilike', $value);
+        return $this->query->where($fieldName, 'LIKE', $value);
     }
 
     protected function where(string $fieldName, $value, $operator = '=')
@@ -51,8 +53,33 @@ class BaseRepository
         return $this->query->orWhere($fieldName, $operator, $value);
     }
 
+    protected function orLike(string $fieldName, $value)
+    {
+        return $this->orWhere($fieldName, $value, 'LIKE');
+    }
+
+    protected function greaterOrEqualDate(string $fieldName, string|Carbon $date)
+    {
+        return $this->query->whereDate($fieldName, $date);
+    }
+
+    protected function betweenDates(string $fieldName, string|Carbon $firstDate, string|Carbon $lastDate)
+    {
+        return $this->greaterOrEqualDate($fieldName, $firstDate)->lessOrEqualDate($fieldName, $lastDate);
+    }
+
+    protected function lessOrEqualDate(string $fieldName, string|Carbon $date)
+    {
+        return $this->query->whereDate($fieldName, $date);
+    }
+
     protected function get(array $columns = ['*'])
     {
         return $this->query->get($columns);
+    }
+
+    protected function all(array $columns = ['*'])
+    {
+        return $this->model->all($columns);
     }
 }
