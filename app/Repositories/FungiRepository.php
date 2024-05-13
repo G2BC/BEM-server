@@ -8,8 +8,8 @@ class FungiRepository extends BaseRepository
 {
     public function __construct(Fungi $model)
     {
-        $this->model = $model;
-        $this->query = $model->query();
+        $this->setModel($model);
+        $this->setQuery($model->query());
     }
 
     public function find(int|string $key): Fungi
@@ -140,7 +140,7 @@ class FungiRepository extends BaseRepository
     public function getByStateAcronym(string $ac)
     {
 
-        $this->query->whereRelation('occurrences', 'state_acronym', '=', $ac);
+        $this->getQuery()->whereRelation('occurrences', 'state_acronym', '=', $ac);
 
         return $this;
     }
@@ -148,28 +148,28 @@ class FungiRepository extends BaseRepository
     public function getByBiome(string $biome)
     {
 
-        $this->query->whereRelation('occurrences', 'biome', '=', $biome);
+        $this->getQuery()->whereRelation('occurrences', 'biome', '=', $biome);
 
         return $this;
     }
 
     public function withOccurrences()
     {
-        $this->query->with('occurrences');
+        $this->getQuery()->with('occurrences');
 
         return $this;
     }
 
     public function withCountOccurrences()
     {
-        $this->query->withCount('occurrences');
+        $this->getQuery()->withCount('occurrences');
 
         return $this;
     }
 
     public function getByTaxonomy(string $taxonomy)
     {
-        $this->query->whereAny([
+        $this->getQuery()->whereAny([
             'specie',
             'popular_name',
             'kingdom',

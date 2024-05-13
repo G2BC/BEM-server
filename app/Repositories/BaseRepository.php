@@ -9,8 +9,48 @@ use Illuminate\Support\Collection;
 
 class BaseRepository
 {
-    protected Model $model;
-    protected Builder $query;
+    private Model $model;
+    private Builder $query;
+
+    /**
+     * Get the value of model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
+     * Set the value of model
+     *
+     * @return  self
+     */
+    public function setModel($model)
+    {
+        $this->model = $model;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of query
+     */
+    public function getQuery()
+    {
+        return $this->query;
+    }
+
+    /**
+     * Set the value of query
+     *
+     * @return  self
+     */
+    public function setQuery($query)
+    {
+        $this->query = $query;
+
+        return $this;
+    }
 
     protected function whereId(int $id)
     {
