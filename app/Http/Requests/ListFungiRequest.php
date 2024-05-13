@@ -2,18 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Utils\Enums\BemClassification;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ListFungiRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return false;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -22,7 +16,10 @@ class ListFungiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'taxonomy' => 'required|max:255|string',
+            'stateAc' => 'nullable|string|max:2',
+            'bem' => ['nullable', Rule::enum(BemClassification::class)],
+            'biome' => 'nullable|string|max:255'
         ];
     }
 }
