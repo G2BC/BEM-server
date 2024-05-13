@@ -11,9 +11,9 @@ class FungiService implements FungiContract
 {
     private FungiRepository $repo;
 
-    public function __construct()
+    public function __construct(FungiRepository $repo)
     {
-        $this->repo = FungiRepository::class;
+        $this->repo = $repo;
     }
 
     public function getById(int $id): Model
@@ -40,15 +40,11 @@ class FungiService implements FungiContract
     {
         try {
 
-            $data = $this->repo->specieLike($taxonomy)
-                ->popularNameLike($taxonomy, 'or')
-                ->kingdomLike($taxonomy, 'or')
-                ->phylumLike($taxonomy, 'or')
-                ->classLike($taxonomy, 'or')
-                ->orderLike($taxonomy, 'or')
-                ->familyLike($taxonomy, 'or')
-                ->genusLike($taxonomy, 'or')
-                ->scientificNameLike($taxonomy, 'or');
+            $data = $this->repo->getByTaxonomy($taxonomy);
+
+            if (!is_null($bemClassification)) {
+                $data->getByBem($bemClassification);
+            }
 
             if (!is_null($occurrenceStateAcronym)) {
                 $data->getByStateAcronym($occurrenceStateAcronym);
@@ -58,12 +54,7 @@ class FungiService implements FungiContract
                 $data->getByBiome($biome);
             }
 
-
-            if (!is_null($bemClassification)) {
-                $data->getByBem($bemClassification);
-            }
-
-            return $data->get();
+            return $data->withCountOccurrences()->get();
         } catch (\Throwable $th) {
             throw $th;
         }
