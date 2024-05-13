@@ -6,6 +6,8 @@
 
 namespace App\Models;
 
+use App\Utils\Enums\BemClassification;
+use App\Utils\Enums\RedListClassification;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -42,8 +44,8 @@ class Fungi extends Model
 	protected $casts = [
 		'uuid' => 'string',
 		'inaturalist_taxa' => 'int',
-		'bem' => 'int',
-		'threatened' => 'int'
+		'bem' => BemClassification::class,
+		'threatened' => RedListClassification::class
 	];
 
 	protected $fillable = [
@@ -65,7 +67,7 @@ class Fungi extends Model
 
 	protected $guarded = ['id'];
 
-	public function occurrences() 
+	public function occurrences()
 	{
 		return $this->belongsToMany(Occurrence::class)->using(FungiOccurrence::class);
 	}
