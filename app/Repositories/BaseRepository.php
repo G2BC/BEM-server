@@ -3,21 +3,14 @@
 namespace App\Repositories;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 
 class BaseRepository
 {
     protected Model $model;
     protected Builder $query;
-
-    public function __construct(
-        Model $model
-    ) {
-        $this->model = $model;
-        $this->query = $model->query();
-    }
 
     protected function whereId(int $id)
     {
@@ -41,7 +34,7 @@ class BaseRepository
 
     protected function ilike(string $fieldName, $value): Builder
     {
-        return $this->query->where($fieldName, 'LIKE', $value);
+        return $this->query->where($fieldName, 'ILIKE', '%' . $value . '%');
     }
 
     protected function where(string $fieldName, $value, $operator = '='): Builder
@@ -56,7 +49,7 @@ class BaseRepository
 
     protected function orLike(string $fieldName, $value): Builder
     {
-        return $this->orWhere($fieldName, $value, 'LIKE');
+        return $this->orWhere($fieldName, '%' . $value . '%', 'ILIKE');
     }
 
     protected function greaterOrEqualDate(string $fieldName, string|Carbon $date): Builder
