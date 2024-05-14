@@ -59,7 +59,7 @@ class FungiService implements FungiContract
             throw $th;
         }
     }
-    
+
     public function getByStateAc(string $occurrenceStateAcronym): Collection
     {
         try {
@@ -71,7 +71,7 @@ class FungiService implements FungiContract
             throw $th;
         }
     }
-    
+
     public function getByBem(int $bem): Collection
     {
         try {
@@ -79,6 +79,30 @@ class FungiService implements FungiContract
             $data = $this->repo->getByBem($bem);
 
             return $data->withCountOccurrences()->get();
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    public function groupedByStateAndClass(): array
+    {
+        try {
+
+            $results = $this->repo->groupedByStateAndClass()->get();
+
+            $resultado = [];
+
+            foreach ($results as $item) {
+                $estado = $item["Estado"];
+                $classificacao = $item["Classificacao"];
+                $quantidade = $item["quantidade"];
+
+                if (!isset($resultado[$estado]))
+                    $resultado[$estado] = [];
+
+                $resultado[$estado][$classificacao] = $quantidade;
+            }
+
+            return $resultado;
         } catch (\Throwable $th) {
             throw $th;
         }

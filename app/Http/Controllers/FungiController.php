@@ -31,10 +31,11 @@ class FungiController extends Controller
             throw $th;
         }
     }
-    
+
     public function getByStateAc(string $stateAc)
     {
-        if(is_null($stateAc)) throw new \Exception('Estado vazio');
+        if (is_null($stateAc))
+            throw new \Exception('Estado vazio');
 
         try {
             return $this->service->getByStateAc($stateAc);
@@ -42,13 +43,22 @@ class FungiController extends Controller
             throw $th;
         }
     }
-    
+
     public function getByBem(int $bem)
     {
-        if(is_null($bem)) throw new \Exception('Classificação BEM vazia');
+        if (is_null($bem))
+            throw new \Exception('Classificação BEM vazia');
 
         try {
             return $this->service->getByBem($bem);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    public function groupedByStateAndClass()
+    {
+        try {
+            return $this->service->groupedByStateAndClass();
         } catch (\Throwable $th) {
             throw $th;
         }
