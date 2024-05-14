@@ -16,4 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'fungi'], function () {
     Route::get('/taxonomy', 'FungiController@getByTaxonomy');
+    Route::get('/stateAc/{stateAc}', 'FungiController@getByStateAc');
 });
+
