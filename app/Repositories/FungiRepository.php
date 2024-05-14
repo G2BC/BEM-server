@@ -189,9 +189,9 @@ class FungiRepository extends BaseRepository
         $this->getQuery()
             ->join('fungi_occurrence', 'fungi.id', '=', 'fungi_occurrence.fungi_id')
             ->join('occurrence', 'fungi_occurrence.occurrence_id', '=', 'occurrence.id')
-            ->select('occurrence.state_acronym as Estado', 'fungi.class as Classificacao')
-            ->selectRaw('COUNT(*) as Quantidade')
-            ->groupBy('occurrence.state_acronym', 'fungi.class');
+            ->select('occurrence.state_acronym as state', 'fungi.bem as classification')
+            ->selectRaw('COUNT(*) as occurrences_count')
+            ->groupBy('occurrence.state_acronym', 'fungi.bem');
 
         return $this;
     }
