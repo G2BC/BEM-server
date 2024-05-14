@@ -71,4 +71,16 @@ class FungiService implements FungiContract
             throw $th;
         }
     }
+    
+    public function getByBem(int $bem): Collection
+    {
+        try {
+
+            $data = $this->repo->getByBem($bem);
+
+            return $data->withCountOccurrences()->get();
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }

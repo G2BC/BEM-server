@@ -42,4 +42,15 @@ class FungiController extends Controller
             throw $th;
         }
     }
+    
+    public function getByBem(int $bem)
+    {
+        if(is_null($bem)) throw new \Exception('Classificação BEM vazia');
+
+        try {
+            return $this->service->getByBem($bem);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }
