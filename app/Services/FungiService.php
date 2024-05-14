@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\Repositories\FungiRepository;
 use App\Services\Contracts\FungiContract;
+use App\Utils\Enums\BemClassification;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection as SupportCollection;
 
 class FungiService implements FungiContract
 {
@@ -83,26 +85,29 @@ class FungiService implements FungiContract
             throw $th;
         }
     }
-    public function groupedByStateAndClass(): array
+    public function groupedByStateAndClass(): SupportCollection
     {
         try {
 
-            $results = $this->repo->groupedByStateAndClass()->get();
+            $data = $this->repo->groupedByStateAndClass()->get();
 
-            $resultado = [];
+            $data = $data->groupBy('state')->flatMap(function (SupportCollection $stateGroup, $state) {
 
-            foreach ($results as $item) {
-                $estado = $item["Estado"];
-                $classificacao = $item["Classificacao"];
-                $quantidade = $item["quantidade"];
+                return [
+                    $state => [
+                        'occurrences_count' => $stateGroup->sum(function ($item) {
 
-                if (!isset($resultado[$estado]))
-                    $resultado[$estado] = [];
+                            return $item->occurrences_count;
+                        }),
+                        'classifications_count' => $stateGroup->mapWithKeys(function ($item) {
 
-                $resultado[$estado][$classificacao] = $quantidade;
-            }
+                            return [BemClassification::from($item->classification)->name => $item->occurrences_count];
+                        })
+                    ]
+                ];
+            });
 
-            return $resultado;
+            return $data;
         } catch (\Throwable $th) {
             throw $th;
         }
