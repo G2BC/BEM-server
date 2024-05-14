@@ -59,4 +59,16 @@ class FungiService implements FungiContract
             throw $th;
         }
     }
+    
+    public function getByStateAc(string $occurrenceStateAcronym): Collection
+    {
+        try {
+
+            $data = $this->repo->getByStateAcronym($occurrenceStateAcronym);
+
+            return $data->withCountOccurrences()->get();
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }

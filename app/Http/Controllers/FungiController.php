@@ -31,4 +31,15 @@ class FungiController extends Controller
             throw $th;
         }
     }
+    
+    public function getByStateAc(string $stateAc)
+    {
+        if(is_null($stateAc)) throw new \Exception('Estado vazio');
+
+        try {
+            return $this->service->getByStateAc($stateAc);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }
