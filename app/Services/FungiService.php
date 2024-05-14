@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\Repositories\FungiRepository;
 use App\Services\Contracts\FungiContract;
+use App\Utils\Enums\BemClassification;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection as SupportCollection;
 
 class FungiService implements FungiContract
 {
@@ -59,7 +61,7 @@ class FungiService implements FungiContract
             throw $th;
         }
     }
-    
+
     public function getByStateAc(string $occurrenceStateAcronym): Collection
     {
         try {
@@ -71,7 +73,7 @@ class FungiService implements FungiContract
             throw $th;
         }
     }
-    
+
     public function getByBem(int $bem): Collection
     {
         try {
@@ -79,6 +81,33 @@ class FungiService implements FungiContract
             $data = $this->repo->getByBem($bem);
 
             return $data->withCountOccurrences()->get();
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    public function groupedByStateAndClass(): SupportCollection
+    {
+        try {
+
+            $data = $this->repo->groupedByStateAndClass()->get();
+
+            $data = $data->groupBy('state')->flatMap(function (SupportCollection $stateGroup, $state) {
+
+                return [
+                    $state => [
+                        'occurrences_count' => $stateGroup->sum(function ($item) {
+
+                            return $item->occurrences_count;
+                        }),
+                        'classifications_count' => $stateGroup->mapWithKeys(function ($item) {
+
+                            return [BemClassification::from($item->classification)->name => $item->occurrences_count];
+                        })
+                    ]
+                ];
+            });
+
+            return $data;
         } catch (\Throwable $th) {
             throw $th;
         }
