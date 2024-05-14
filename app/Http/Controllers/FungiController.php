@@ -55,7 +55,7 @@ class FungiController extends Controller
             throw $th;
         }
     }
-    public function groupedByStateAndClass()
+    public function heatMap()
     {
         try {
             return $this->service->groupedByStateAndClass();

@@ -18,6 +18,6 @@ Route::group(['prefix' => 'fungi'], function () {
     Route::get('/taxonomy', 'FungiController@getByTaxonomy');
     Route::get('/stateAc/{stateAc}', 'FungiController@getByStateAc');
     Route::get('/bem/{id}', 'FungiController@getByBem');
-    Route::get('/map', 'FungiController@groupedByStateAndClass');
+    Route::get('/heatmap', 'FungiController@heatMap');
 });
 
