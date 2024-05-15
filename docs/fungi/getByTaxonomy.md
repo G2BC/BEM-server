@@ -1,4 +1,4 @@
-#### Path: **apiUrl/fungi/taxonomy**
+#### Path: **apiUrl/api/fungi/taxonomy**
 
 ##### Body:
 *   **taxonomy**: required|string - String de busca que pode ser referente a reino, espécie, gênero, família, filo, classe, ordem, nome científico ou nome popular

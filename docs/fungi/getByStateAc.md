@@ -1,10 +1,10 @@
-#### Path: **apiUrl/fungi/stateAc/{stateAc}**
+#### Path: **apiUrl/api/fungi/stateAc/{stateAc}**
 
 ##### Body:
 *   **stateAc**: required|string|max:2 - Sigla do estado de ocorrência
 Ex:
 ```
-apiUrl/fungi/stateAc/BA
+apiUrl/api/fungi/stateAc/BA
 ```
 
 ##### Response (200):

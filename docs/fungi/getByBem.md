@@ -1,10 +1,10 @@
-#### Path: **apiUrl/fungi/bem/{id}**
+#### Path: **apiUrl/api/fungi/bem/{id}**
 
 ##### Body:
 *   **id**: required|int - Id da classificação BEM
 Ex:
 ```
-apiUrl/fungi/bem/1
+apiUrl/api/fungi/bem/1
 ```
 
 ##### Response (200):

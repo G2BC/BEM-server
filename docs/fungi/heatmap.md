@@ -1,4 +1,4 @@
-#### Path: **apiUrl/fungi/heatmap**
+#### Path: **apiUrl/api/fungi/heatmap**
 
 ##### Response (200):
 Content-Type: application/json
