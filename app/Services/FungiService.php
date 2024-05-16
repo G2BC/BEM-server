@@ -18,6 +18,15 @@ class FungiService implements FungiContract
         $this->repo = $repo;
     }
 
+    public function getAll(): Collection
+    {
+        try {
+            return $this->repo->all();
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
     public function getById(int $id): Model
     {
         try {
@@ -85,6 +94,7 @@ class FungiService implements FungiContract
             throw $th;
         }
     }
+
     public function groupedByStateAndClass(): SupportCollection
     {
         try {

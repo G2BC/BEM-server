@@ -63,4 +63,13 @@ class FungiController extends Controller
             throw $th;
         }
     }
+
+    public function getAll()
+    {
+        try {
+            return $this->service->getAll();
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 }

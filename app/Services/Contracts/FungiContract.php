@@ -16,4 +16,6 @@ interface FungiContract extends Contract
     public function getByBem(int $bem): Collection;
 
     public function groupedByStateAndClass(): SupportCollection;
+
+    public function getAll(): Collection;
 }
