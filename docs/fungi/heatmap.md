@@ -1,4 +1,5 @@
 #### Path: **apiUrl/api/fungi/heatmap**
+Lista os Cogumelos agrupados por Estado e Classificação BEM para o Mapa de Calor
 
 ##### Response (200):
 Content-Type: application/json
