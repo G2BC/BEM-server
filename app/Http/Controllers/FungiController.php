@@ -34,6 +34,7 @@ class FungiController extends Controller
 
     public function getByStateAc(string $stateAc)
     {
+        //TODO: verificar estado valido dentro das opções utilizando enum, tratar erro com exception customizada
         if (is_null($stateAc))
             throw new \Exception('Estado vazio');
 
@@ -46,6 +47,7 @@ class FungiController extends Controller
 
     public function getByBem(int $bem)
     {
+        //TODO: verificar classificação valida dentro das opções utilizando enum, tratar erro com exception customizada
         if (is_null($bem))
             throw new \Exception('Classificação BEM vazia');
 
@@ -68,6 +70,16 @@ class FungiController extends Controller
     {
         try {
             return $this->service->getAll();
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function getByUuid(string $uuid)
+    {
+        try {
+
+            return $this->service->getByUuid($uuid);
         } catch (\Throwable $th) {
             throw $th;
         }
