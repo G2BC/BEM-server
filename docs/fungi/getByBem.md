@@ -1,7 +1,7 @@
 #### Path: **apiUrl/api/fungi/bem/{id}**
 Lista os Cogumelos de uma Classificação BEM específica
 
-##### Body:
+##### Param:
 *   **id**: required|int - Id da classificação BEM
 Ex:
 ```

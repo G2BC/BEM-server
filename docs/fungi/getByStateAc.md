@@ -1,7 +1,7 @@
 #### Path: **apiUrl/api/fungi/stateAc/{stateAc}**
 Lista os Cogumelos de um Estado específico
 
-##### Body:
+##### Param:
 *   **stateAc**: required|string|max:2 - Sigla do estado de ocorrência
 Ex:
 ```
