@@ -24,9 +24,11 @@ class FungiController extends Controller
         $stateAc = array_key_exists('stateAc', $data) ? $data['stateAc'] : null;
         $bem = array_key_exists('bem', $data) ? $data['bem'] : null;
         $biome = array_key_exists('biome', $data) ? $data['biome'] : null;
+        $page = array_key_exists('page', $data) ? $data['page'] : null;
 
         try {
-            return $this->service->getByTaxonomy($taxonomy, $stateAc, $biome, $bem);
+            $paginatedResults = $this->service->getByTaxonomy($taxonomy, $stateAc, $biome, $bem, $page);
+            return response()->json($paginatedResults);
         } catch (\Throwable $th) {
             throw $th;
         }

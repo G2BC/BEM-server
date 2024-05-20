@@ -19,7 +19,8 @@ class ListFungiRequest extends FormRequest
             'taxonomy' => 'required|max:255|string',
             'stateAc' => 'nullable|string|max:2',
             'bem' => ['nullable', Rule::enum(BemClassification::class)],
-            'biome' => 'nullable|string|max:255'
+            'biome' => 'nullable|string|max:255',
+            'page' => 'nullable|int',
         ];
     }
 }

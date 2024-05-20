@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class BaseRepository
 {
@@ -115,5 +116,14 @@ class BaseRepository
     public function all(array $columns = ['*']): Collection
     {
         return $this->model->all($columns);
+    }
+
+    public function paginate(
+        callable|int|null $perPage = null,
+        array|string $columns = ['*'],
+        string $pageName = 'page',
+        int|null $page = null
+    ): LengthAwarePaginator {
+        return $this->query->paginate($perPage, $columns, $pageName, $page);
     }
 }
