@@ -1,4 +1,4 @@
-#### Path: **apiUrl/api/fungi/{uuid}**
+#### Path: **apiUrl/api/fungi/mushroom/{uuid}**
 Retorna um registro de cogumelo pelo seu UUID
 
 
