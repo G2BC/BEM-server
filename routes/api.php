@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'fungi'], function () {
     Route::get('/', 'FungiController@getAll');
     Route::get('/taxonomy', 'FungiController@getByTaxonomy');
-    Route::get('/{uuid}', 'FungiController@getByUuid');
     Route::get('/heatmap', 'FungiController@heatMap');
     Route::get('/stateAc/{stateAc}', 'FungiController@getByStateAc');
     Route::get('/bem/{id}', 'FungiController@getByBem');
