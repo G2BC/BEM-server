@@ -8,6 +8,7 @@ use App\Utils\Enums\BemClassification;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as SupportCollection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class FungiService implements FungiContract
 {
@@ -47,7 +48,7 @@ class FungiService implements FungiContract
         }
     }
 
-    public function getByTaxonomy(string $taxonomy, ?string $occurrenceStateAcronym, ?string $biome, ?int $bemClassification): Collection
+    public function getByTaxonomy(string $taxonomy, ?string $occurrenceStateAcronym, ?string $biome, ?int $bemClassification, ?int $page): LengthAwarePaginator
     {
         try {
 
@@ -65,7 +66,9 @@ class FungiService implements FungiContract
                 $data->getByBiome($biome);
             }
 
-            return $data->withCountOccurrences()->get();
+            $data->withCountOccurrences();
+
+            return $data->paginate(20, page: $page);
         } catch (\Throwable $th) {
             throw $th;
         }
