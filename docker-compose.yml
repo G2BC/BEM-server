@@ -12,7 +12,11 @@ services:
             - backend
         depends_on:
             - pgsql
-        command: php artisan serve
+        command: [
+            php artisan app:register-fungi-occurrences,
+            php artisan serve,
+            ]
+
     pgsql:
         image: 'postgres:15'
         restart: always
