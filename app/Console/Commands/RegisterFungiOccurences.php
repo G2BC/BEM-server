@@ -85,10 +85,12 @@ class RegisterFungiOccurences extends Command
                             'genus' => trim($fungiRow[6]),
                             'specie' => $specie,
                             'scientific_name' => (trim($fungiRow[6]) . ' ' . $specie),
+                            'brazilian_type' => $fungiRow[9],
+                            'brazilian_type_synonym' => $fungiRow[10],
                             'inaturalist_taxa' => $fungiRow[11],
                             'popular_name' => trim($fungiRow[12]),
                             'bem' => BemClassification::getValueByName(trim($fungiRow[13])),
-                            'threatened' => $iucnData->isEmpty() ? RedListClassification::NA->value : RedListClassification::getValueByName($iucnData->shift()['category']),
+                            'threatened' => $iucnData->isEmpty() ? RedListClassification::NE->value : RedListClassification::getValueByName($iucnData->shift()['category']),
                             'description' => null
                         ]
                     );
@@ -113,7 +115,7 @@ class RegisterFungiOccurences extends Command
                                         'type' => is_null($fungiRow[8]) ? null : OccurrenceTypes::Literature->value,
                                         'state_acronym' => strtoupper(trim($acr)),
                                         'state_name' => StatesAcronyms::getStateByAcronym(strtoupper(trim($acr))),
-                                        'biome' => trim($occurrence[2]),
+                                        'habitat' => trim($occurrence[2]),
                                         'literature_reference' => null,
                                         'latitude' => null,
                                         'longitude' => null
