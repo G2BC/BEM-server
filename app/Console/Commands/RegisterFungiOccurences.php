@@ -37,7 +37,7 @@ class RegisterFungiOccurences extends Command
     public function handle()
     {
         $this->info('Iniciando leitura da planilha.');
-        $filePath = (dirname(__FILE__, 4) . '\support\Brazilian_Edible_Mushrooms_Final.xlsx');
+        $filePath = (dirname(__FILE__, 4) . '/support/Brazilian_Edible_Mushrooms_Final.xlsx');
 
         $reader = new Xlsx();
 
