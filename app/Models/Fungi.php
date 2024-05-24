@@ -28,6 +28,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $specie
  * @property string $scientific_name
  * @property string|null $popular_name
+ * @property string|null $brazilian_type
+ * @property string|null $brazilian_type_synonym
  * @property int|null $threatened
  * @property string|null $description
  * @property Carbon|null $created_at
@@ -60,6 +62,8 @@ class Fungi extends Model
 		'genus',
 		'specie',
 		'scientific_name',
+		'brazilian_type',
+		'brazilian_type_synonym',
 		'popular_name',
 		'threatened',
 		'description'
