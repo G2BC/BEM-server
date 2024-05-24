@@ -51,7 +51,7 @@ class Occurrence extends Model
 		'type',
 		'state_acronym',
 		'state_name',
-		'biome',
+		'habitat',
 		'literature_reference',
 		'latitude',
 		'longitude'

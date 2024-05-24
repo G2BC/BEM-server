@@ -148,7 +148,7 @@ class FungiRepository extends BaseRepository
     public function getByBiome(string $biome)
     {
 
-        $this->getQuery()->whereRelation('occurrences', 'biome', '=', $biome);
+        $this->getQuery()->whereRelation('occurrences', 'habitat', '=', $biome);
 
         return $this;
     }
