@@ -1,13 +1,10 @@
 services:
-    laravel:
-        container_name: '${APP_NAME}'
+    app:
+        container_name: 'bem-server'
         restart: always
         build:
             context: .
             dockerfile: Dockerfile
-            args:
-                user: '${APP_NAME}'
-                uid: 9999
         environment:
             DB_CONNECTION: '${DB_CONNECTION}'
             DB_HOST: '${DB_CONTEINER_NAME:-pgsql}'
@@ -17,7 +14,7 @@ services:
             DB_PASSWORD: '${DB_PASSWORD}'
         entrypoint: [ "./docker/entrypoint.sh" ]
         ports:
-            - '${APP_PORT:-80}:80'
+            - '${APP_PORT:-81}:80'
         working_dir: /var/www
         volumes:
             - './:/var/www'
@@ -26,6 +23,20 @@ services:
         depends_on:
             pgsql:
                 condition: service_healthy
+    
+    webserver:
+        image: nginx:alpine
+        container_name: app_webserver
+        restart: unless-stopped
+        depends_on:
+          - app
+        volumes:
+          - ./:/var/www
+          - ./docker/nginx/conf.d:/etc/nginx/conf.d
+        ports:
+          - "80:80"
+        networks:
+          - backend
 
     pgsql:
         image: 'postgres:15'

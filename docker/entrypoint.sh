@@ -1,5 +1,5 @@
 #!/bin/bash
-DB_HOST=${DB_HOST:-pgsql}
+DB_HOST=${DB_CONTEINER_NAME:-pgsql}
 DB_PORT=${DB_PORT:-5432}
 # Wait for PostgreSQL to be ready
 echo "Waiting for PostgreSQL..."
@@ -14,5 +14,7 @@ php artisan migrate
 # Populate database
 php artisan app:register-fungi-occurrences
 
+# Init Server
+php artisan serve
 # Execute the original CMD
 exec "$@"

@@ -1,4 +1,4 @@
-FROM php:8.1-apache
+FROM php:8.1-fpm
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -27,14 +27,6 @@ RUN docker-php-ext-enable pdo_pgsql pgsql grpc exif gettext gd bz2 zip
 # Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# # Create system user to run Composer and Artisan Commands
-# ARG user
-# ARG uid
-# RUN useradd -G www-data,root -u $uid -d /home/$user $user
-# RUN mkdir -p /home/$user/.composer && \
-#     chown -R $user:$user /home/$user
-# USER $user
-
 # Set working directory
 WORKDIR /var/www
 COPY . /var/www
@@ -47,5 +39,3 @@ COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 80
-
-CMD ["apache2-foreground"]
