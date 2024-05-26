@@ -29,13 +29,5 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # Set working directory
 WORKDIR /var/www
-COPY . /var/www
 
-# Install application dependencies
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
-
-# Copy entrypoint script
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
-EXPOSE 80
+EXPOSE 9000
