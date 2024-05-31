@@ -22,3 +22,4 @@ Route::group(['prefix' => 'fungi'], function () {
     Route::get('/bem/{id}', 'FungiController@getByBem');
     Route::get('/mushroom/{uuid}', 'FungiController@getByUuid');
 });
+Route::get('/observations', 'FungiController@updateObservations');
