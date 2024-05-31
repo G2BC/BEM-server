@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $id
  * @property uuid $uuid
  * @property int|null $inaturalist_taxa
- * @property int $bem
+ * @property BemClassification $bem
  * @property string $kingdom
  * @property string $phylum
  * @property string $class
@@ -28,9 +28,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $specie
  * @property string $scientific_name
  * @property string|null $popular_name
+ * @property string|null $authors
  * @property string|null $brazilian_type
  * @property string|null $brazilian_type_synonym
- * @property int|null $threatened
+ * @property RedListClassification|null $threatened
  * @property string|null $description
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -62,6 +63,7 @@ class Fungi extends Model
 		'genus',
 		'specie',
 		'scientific_name',
+		'authors',
 		'brazilian_type',
 		'brazilian_type_synonym',
 		'popular_name',
@@ -69,7 +71,12 @@ class Fungi extends Model
 		'description'
 	];
 
-	protected $guarded = ['id'];
+	protected $guarded = [
+		'id',
+		'created_at',
+		'updated_at',
+		'deleted_at'
+	];
 
 	public function occurrences()
 	{
