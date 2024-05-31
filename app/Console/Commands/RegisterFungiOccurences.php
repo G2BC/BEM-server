@@ -85,6 +85,7 @@ class RegisterFungiOccurences extends Command
                             'genus' => trim($fungiRow[6]),
                             'specie' => $specie,
                             'scientific_name' => (trim($fungiRow[6]) . ' ' . $specie),
+                            'authors' =>  trim($fungiRow[8]),
                             'brazilian_type' => $fungiRow[9],
                             'brazilian_type_synonym' => $fungiRow[10],
                             'inaturalist_taxa' => $fungiRow[11],
@@ -118,7 +119,8 @@ class RegisterFungiOccurences extends Command
                                         'habitat' => trim($occurrence[2]),
                                         'literature_reference' => null,
                                         'latitude' => null,
-                                        'longitude' => null
+                                        'longitude' => null,
+                                        'curation' => true
                                     ]
                                 );
 
