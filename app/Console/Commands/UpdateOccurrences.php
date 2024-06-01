@@ -56,12 +56,13 @@ class UpdateOccurrences extends Command
 
                     if ($iNaturalistData['total_results'] > 200) {
                         $totalPages = round($iNaturalistData['total_results'] / $iNaturalistData['per_page']) + 1;
-                        for ($i = 2; $i < $totalPages; $i++) {
-                            $iNaturalistResponse = $client->get("https://api.inaturalist.org/v1/observations?per_page=200&page={$i}&place_id=6878&taxon_id={$fungi->inaturalist_taxa}&created_d1={$lastUpdatedDate}&created_d2={$today}");
+                        for ($page = 2; $page < $totalPages; $page++) {
+                            $iNaturalistResponse = $client->get("https://api.inaturalist.org/v1/observations?per_page=200&page={$page}&place_id=6878&taxon_id={$fungi->inaturalist_taxa}&created_d1={$lastUpdatedDate}&created_d2={$today}");
                             $iNaturalistData = json_decode($iNaturalistResponse->getBody()->getContents(), true);
                             $iNaturalistResults->add($iNaturalistData['results']);
                         }
                     }
+
                     $iNaturalistResults->flatten(1)->each(function ($newOccurrence) use ($occurrencesIds) {
                         $state = null;
                         if (!is_null($newOccurrence['place_guess'])) {
@@ -96,30 +97,42 @@ class UpdateOccurrences extends Command
                     });
                 }
 
-                // $speciesLinkKey = env('SPECIES_LINK_KEY');
-                // $speciesLinkResponse = $client->get("");
-                // $speciesLinkData = json_decode($speciesLinkResponse->getBody()->getContents(), true);
-                // $speciesLinkData = array_key_exists('results', $speciesLinkData) ?? collect($speciesLinkData['results']);
+                $speciesLinkKey = env('SPECIES_LINK_KEY');
+                $speciesLinkResults = collect();
 
-                // $speciesLinkData->each(function ($newOccurrence) use ($occurrencesIds) {
-                //     $occurrence = Occurrence::create(
-                //         [
-                //             'uuid' => Str::uuid(),
-                //             'inaturalist_taxa' => null,
-                //             'specieslink_id' => null,
-                //             'type' => is_null($newOccurrence['']) ? null : OccurrenceTypes::SpeciesLink->value,
-                //             'state_acronym' => strtoupper(trim($acr)),
-                //             'state_name' => StatesAcronyms::getStateByAcronym(strtoupper(trim($acr))),
-                //             'habitat' => trim($occurrence[2]),
-                //             'literature_reference' => null,
-                //             'latitude' => null,
-                //             'longitude' => null,
-                //             'curation' => false
-                //         ]
-                //     );
+                $speciesLinkResponse = $client->get("https://specieslink.net/ws/1.0/search?country=Brazil&limit=5000&apikey={$speciesLinkKey}&scientificName={$fungi->genus}%20{$fungi->specie}");
+                $speciesLinkData = json_decode($speciesLinkResponse->getBody()->getContents(), true);
+                $speciesLinkResults->add($speciesLinkData['features']);
 
-                //     $occurrencesIds->add($occurrence->id);
-                // });
+                if ($speciesLinkData['numberMatched'] > $speciesLinkData['numberReturned']) {
+                    $totalPages = round($speciesLinkData['numberMatched'] / $speciesLinkData['numberReturned']) + 1;
+                    for ($page = 1; $page < $totalPages; $page++) {
+                        $speciesLinkResponse = $client->get("https://specieslink.net/ws/1.0/search?country=Brazil&limit=5000&&offset={$page}&apikey={$speciesLinkKey}&scientificName={$fungi->genus}%20{$fungi->specie}");
+                        $speciesLinkData = json_decode($speciesLinkResponse->getBody()->getContents(), true);
+                        $speciesLinkResults->add($speciesLinkData['features']);
+                    }
+                }
+
+                $speciesLinkResults->flatten(1)->each(function ($newOccurrence) use ($occurrencesIds) {
+                    $state = StatesAcronyms::tryFrom($newOccurrence['properties']['stateprovince']);
+                    $occurrence = Occurrence::create(
+                        [
+                            'uuid' => Str::uuid(),
+                            'inaturalist_taxa' => null,
+                            'specieslink_id' => $newOccurrence['properties']['catalognumber'],
+                            'type' => OccurrenceTypes::SpeciesLink->value,
+                            'state_acronym' => is_null($state) ? '' : $state->name,
+                            'state_name' => is_null($state) ? '' : $state->value,
+                            'habitat' => '',
+                            'literature_reference' => null,
+                            'latitude' => $newOccurrence['properties']['decimallatitude'],
+                            'longitude' => $newOccurrence['properties']['decimallongitude'],
+                            'curation' => false
+                        ]
+                    );
+
+                    $occurrencesIds->add($occurrence->id);
+                });
 
                 $fungi->occurrences()->attach($occurrencesIds->toArray());
                 $bar->advance();
