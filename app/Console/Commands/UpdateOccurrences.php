@@ -34,36 +34,46 @@ class UpdateOccurrences extends Command
     public function handle()
     {
         $client = new Client();
+        ini_set('memory_limit', '1024M');
+        set_time_limit(1200);
 
         $lastUpdatedDate = '';
         $today = Carbon::today()->format('d-m-Y');
         try {
             DB::beginTransaction();
+            $bar = $this->output->createProgressBar(Fungi::all()->count());
+            $bar->start();
 
-            Fungi::all()->each(function (Fungi $fungi) use ($client, $lastUpdatedDate, $today) {
+            Fungi::all()->each(function (Fungi $fungi) use ($client, $lastUpdatedDate, $today, $bar) {
                 $occurrencesIds = collect();
 
                 if (!is_null($fungi->inaturalist_taxa)) {
                     $iNaturalistResults = collect();
 
-                    $iNaturalistResponse = $client->get("https://api.inaturalist.org/v1/observations?per_page=200&page=1&taxon_id={$fungi->inaturalist_taxa}&created_d1={$lastUpdatedDate}&created_d2={$today}");
+                    $iNaturalistResponse = $client->get("https://api.inaturalist.org/v1/observations?per_page=200&page=1&place_id=6878&taxon_id={$fungi->inaturalist_taxa}&created_d1={$lastUpdatedDate}&created_d2={$today}");
                     $iNaturalistData = json_decode($iNaturalistResponse->getBody()->getContents(), true);
                     $iNaturalistResults->add($iNaturalistData['results']);
 
                     if ($iNaturalistData['total_results'] > 200) {
-                        $totalPages = round($iNaturalistData['total_results'] / $iNaturalistData['per_page']);
+                        $totalPages = round($iNaturalistData['total_results'] / $iNaturalistData['per_page']) + 1;
                         for ($i = 2; $i < $totalPages; $i++) {
-                            $iNaturalistResponse = $client->get("https://api.inaturalist.org/v1/observations?per_page=200&page={$i}&taxon_id={$fungi->inaturalist_taxa}&created_d1={$lastUpdatedDate}&created_d2={$today}");
+                            $iNaturalistResponse = $client->get("https://api.inaturalist.org/v1/observations?per_page=200&page={$i}&place_id=6878&taxon_id={$fungi->inaturalist_taxa}&created_d1={$lastUpdatedDate}&created_d2={$today}");
                             $iNaturalistData = json_decode($iNaturalistResponse->getBody()->getContents(), true);
                             $iNaturalistResults->add($iNaturalistData['results']);
                         }
                     }
+                    $iNaturalistResults->flatten(1)->each(function ($newOccurrence) use ($occurrencesIds) {
+                        $state = null;
+                        if (!is_null($newOccurrence['place_guess'])) {
+                            $state = StatesAcronyms::searchForStateAc($newOccurrence['place_guess']) ?? StatesAcronyms::searchForState($newOccurrence['place_guess']);
+                        }
 
-                    $iNaturalistResults->each(function ($newOccurrence) use ($occurrencesIds) {
-                        dd($newOccurrence['place_guess']);
-                        $stateAcr = explode(',', $newOccurrence['place_guess'])[1];
-                        $lat = explode(',', $newOccurrence['location'])[0];
-                        $lng = explode(',', $newOccurrence['location'])[1];
+                        $lat = null;
+                        $lng = null;
+                        if (!is_null($newOccurrence['location'])) {
+                            $lat = explode(',', $newOccurrence['location'])[0];
+                            $lng = explode(',', $newOccurrence['location'])[1];
+                        }
 
                         $occurrence = Occurrence::updateOrCreate(
                             ['inaturalist_taxa' => $newOccurrence['id']],
@@ -71,9 +81,9 @@ class UpdateOccurrences extends Command
                                 'uuid' => Str::uuid(),
                                 'inaturalist_taxa' => $newOccurrence['id'],
                                 'specieslink_id' => null,
-                                'type' => is_null($newOccurrence['']) ? null : OccurrenceTypes::iNaturalist->value,
-                                'state_acronym' => strtoupper(trim($stateAcr)),
-                                'state_name' => StatesAcronyms::getStateByAcronym(strtoupper(trim($stateAcr))),
+                                'type' => OccurrenceTypes::iNaturalist->value,
+                                'state_acronym' => is_null($state) ? '' : $state->name,
+                                'state_name' => is_null($state) ? '' : $state->value,
                                 'habitat' => '',
                                 'literature_reference' => null,
                                 'latitude' => $lat,
@@ -111,10 +121,12 @@ class UpdateOccurrences extends Command
                 //     $occurrencesIds->add($occurrence->id);
                 // });
 
-                // $fungi->occurrences()->attach($occurrencesIds->toArray());
+                $fungi->occurrences()->attach($occurrencesIds->toArray());
+                $bar->advance();
             });
 
             DB::commit();
+            $bar->finish();
         } catch (\Throwable $th) {
             DB::rollBack();
             $this->error($th->getMessage());
