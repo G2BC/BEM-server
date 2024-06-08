@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * Class User
@@ -28,7 +29,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @package App\Models
  */
-class User extends Model implements Authenticatable
+class User extends Model implements JWTSubject
 {
 	use SoftDeletes;
 	protected $table = 'user';
@@ -51,31 +52,13 @@ class User extends Model implements Authenticatable
 		'institution'
 	];
 
-	public function getAuthIdentifierName()
-	{
-		return $this->getKeyName();
-	}
-
-	public function getAuthIdentifier()
+	public function getJWTIdentifier()
 	{
 		return $this->getKey();
 	}
 
-	public function getAuthPassword()
+	public function getJWTCustomClaims()
 	{
-		return $this->password;
-	}
-
-
-	public function getRememberToken()
-	{
-	}
-
-	public function setRememberToken($value)
-	{
-	}
-
-	public function getRememberTokenName()
-	{
+		return [];
 	}
 }
