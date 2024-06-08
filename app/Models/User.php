@@ -8,6 +8,7 @@ namespace App\Models;
 
 use App\Utils\Enums\UserTypes;
 use Carbon\Carbon;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -27,7 +28,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @package App\Models
  */
-class User extends Model
+class User extends Model implements Authenticatable
 {
 	use SoftDeletes;
 	protected $table = 'user';
@@ -49,4 +50,32 @@ class User extends Model
 		'password',
 		'institution'
 	];
+
+	public function getAuthIdentifierName()
+	{
+		return $this->getKeyName();
+	}
+
+	public function getAuthIdentifier()
+	{
+		return $this->getKey();
+	}
+
+	public function getAuthPassword()
+	{
+		return $this->password;
+	}
+
+
+	public function getRememberToken()
+	{
+	}
+
+	public function setRememberToken($value)
+	{
+	}
+
+	public function getRememberTokenName()
+	{
+	}
 }
