@@ -27,6 +27,9 @@ return new class extends Migration
             $table->string('popular_name', 255)->nullable();
             $table->integer('threatened')->nullable();
             $table->string('description', 255)->nullable();
+            $table->char('brazilian_type', 1)->nullable();
+            $table->char('brazilian_type_synonym', 2)->nullable();
+            $table->string('authors')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
