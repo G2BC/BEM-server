@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::post('/login', 'AuthController@login');
 
 Route::group(['prefix' => 'fungi'], function () {
     Route::get('/', 'FungiController@getAll');
