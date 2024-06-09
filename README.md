@@ -30,7 +30,8 @@ Certifique de possuir [PHP 8.1](https://www.php.net/downloads.php) e [Composer](
 2. Acessar o diretório do projeto e executar o comando `composer i`
 3. Para instanciar as tabelas do banco de dados `php artisan migrate`
 4. Execute o Command para realizar a leitura da planilha base e inserir os registros `php artisan app:register-fungi-occurrences`
-5. Inicialize o servidor com o comando `php artisan serve`
+5. Gere a chave JWT `php artisan jwt:secret`
+6. Inicialize o servidor com o comando `php artisan serve`
 
 ## Docker
 Certifique de possuir [Docker](https://docs.docker.com/get-docker/) e [Docker Compose](https://docs.docker.com/compose/install/)

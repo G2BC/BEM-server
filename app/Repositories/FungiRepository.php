@@ -12,17 +12,6 @@ class FungiRepository extends BaseRepository
         $this->setQuery($model->query());
     }
 
-    public function find(int|string $key): Fungi
-    {
-        if (is_int($key)) {
-
-            return $this->findId($key);
-        } else if (is_string($key)) {
-
-            return $this->findUuid($key);
-        }
-    }
-
     public function specieLike(string $specie, string $boolOperator = 'and')
     {
         if ($boolOperator == 'or') {

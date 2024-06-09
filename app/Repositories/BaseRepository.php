@@ -53,6 +53,17 @@ class BaseRepository
         return $this;
     }
 
+    public function find(int|string $key): Model
+    {
+        if (is_int($key)) {
+
+            return $this->findId($key);
+        } else if (is_string($key)) {
+
+            return $this->findUuid($key);
+        }
+    }
+
     protected function whereId(int $id)
     {
         return $this->query->where('id', $id);
