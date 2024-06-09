@@ -22,9 +22,7 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        $data = $request->validated();
-
-        $credentials = [$data['email'], $data['password']];
+        $credentials = $request->validated();
 
         $auth = $this->service->login($credentials);
 
