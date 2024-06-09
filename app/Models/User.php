@@ -8,9 +8,8 @@ namespace App\Models;
 
 use App\Utils\Enums\UserTypes;
 use Carbon\Carbon;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
@@ -29,7 +28,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  *
  * @package App\Models
  */
-class User extends Model implements JWTSubject
+class User extends Authenticatable implements JWTSubject
 {
 	use SoftDeletes;
 	protected $table = 'user';
