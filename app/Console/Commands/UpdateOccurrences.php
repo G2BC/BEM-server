@@ -41,7 +41,6 @@ class UpdateOccurrences extends Command implements Isolatable
         $lastUpdatedDate = '';
         $today = Carbon::today()->format('d-m-Y');
         try {
-            DB::beginTransaction();
             $bar = $this->output->createProgressBar(Fungi::all()->count());
             $bar->start();
 
@@ -142,7 +141,6 @@ class UpdateOccurrences extends Command implements Isolatable
                 $bar->advance();
             });
 
-            DB::commit();
             $bar->finish();
         } catch (\Throwable $th) {
             DB::rollBack();
