@@ -9,10 +9,11 @@ use App\Utils\Enums\StatesAcronyms;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Console\Isolatable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class UpdateOccurrences extends Command
+class UpdateOccurrences extends Command implements Isolatable
 {
     /**
      * The name and signature of the console command.
@@ -114,24 +115,27 @@ class UpdateOccurrences extends Command
                 }
 
                 $speciesLinkResults->flatten(1)->each(function ($newOccurrence) use ($occurrencesIds) {
-                    $state = StatesAcronyms::tryFrom($newOccurrence['properties']['stateprovince']);
-                    $occurrence = Occurrence::create(
-                        [
-                            'uuid' => Str::uuid(),
-                            'inaturalist_taxa' => null,
-                            'specieslink_id' => $newOccurrence['properties']['catalognumber'],
-                            'type' => OccurrenceTypes::SpeciesLink->value,
-                            'state_acronym' => is_null($state) ? '' : $state->name,
-                            'state_name' => is_null($state) ? '' : $state->value,
-                            'habitat' => '',
-                            'literature_reference' => null,
-                            'latitude' => $newOccurrence['properties']['decimallatitude'],
-                            'longitude' => $newOccurrence['properties']['decimallongitude'],
-                            'curation' => false
-                        ]
-                    );
+                    if (array_key_exists('catalognumber', $newOccurrence['properties'])) {
+                        $state = array_key_exists('stateprovince', $newOccurrence['properties']) ? StatesAcronyms::tryFrom($newOccurrence['properties']['stateprovince']) : null;
+                        $occurrence = Occurrence::updateOrCreate(
+                            ['specieslink_id' => $newOccurrence['properties']['catalognumber']],
+                            [
+                                'uuid' => Str::uuid(),
+                                'inaturalist_taxa' => null,
+                                'specieslink_id' => $newOccurrence['properties']['catalognumber'],
+                                'type' => OccurrenceTypes::SpeciesLink->value,
+                                'state_acronym' => is_null($state) ? '' : $state->name,
+                                'state_name' => is_null($state) ? '' : $state->value,
+                                'habitat' => '',
+                                'literature_reference' => null,
+                                'latitude' => $newOccurrence['properties']['decimallatitude'],
+                                'longitude' => $newOccurrence['properties']['decimallongitude'],
+                                'curation' => false
+                            ]
+                        );
 
-                    $occurrencesIds->add($occurrence->id);
+                        $occurrencesIds->add($occurrence->id);
+                    }
                 });
 
                 $fungi->occurrences()->attach($occurrencesIds->toArray());
