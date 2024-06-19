@@ -1,3 +1,4 @@
+#### Method: **GET**
 #### Path: **apiUrl/api/fungi/stateAc/{stateAc}**
 Lista os Cogumelos de um Estado específico
 

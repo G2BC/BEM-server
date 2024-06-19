@@ -1,3 +1,4 @@
+#### Method: **GET**
 #### Path: **apiUrl/api/fungi/taxonomy**
 Lista os Cogumelos com base em alguns filtros
 

@@ -9,3 +9,7 @@ Agrupados por recurso
 *   [Consulta por Estado](./fungi/getByStateAc.md)
 *   [Consulta por Classificação BEM](./fungi/getByBem.md)
 *   [Mapa de Calor](./fungi/heatmap.md)
+*   [Atualização de Ocorrências](./fungi/updateObservations.md)
+
+### Autenticação
+*   [Login](./auth/login.md)

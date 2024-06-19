@@ -1,3 +1,4 @@
+#### Method: **GET**
 #### Path: **apiUrl/api/fungi/heatmap**
 Lista os Cogumelos agrupados por Estado e Classificação BEM para o Mapa de Calor
 

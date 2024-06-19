@@ -1,3 +1,4 @@
+#### Method: **GET**
 #### Path: **apiUrl/api/fungi**
 Lista todos os cogumelos registrados no sistema
 

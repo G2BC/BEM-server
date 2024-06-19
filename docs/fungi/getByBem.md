@@ -1,3 +1,4 @@
+#### Method: **GET**
 #### Path: **apiUrl/api/fungi/bem/{id}**
 Lista os Cogumelos de uma Classificação BEM específica
 
