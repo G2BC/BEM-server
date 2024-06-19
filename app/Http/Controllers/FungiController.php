@@ -91,7 +91,9 @@ class FungiController extends Controller
 
 
     public function updateObservations()
-    {
-        Artisan::call(UpdateOccurrences::class);
+    {   
+        Artisan::queue(UpdateOccurrences::class);
+
+        return response()->json(['message'=> 'Atualização das observações realizada']);
     }
 }
