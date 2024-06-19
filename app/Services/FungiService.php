@@ -32,7 +32,7 @@ class FungiService implements FungiContract
     {
         try {
 
-            return $this->repo->find($id);
+            return $this->repo->find($id)->load('occurrences');
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -42,7 +42,7 @@ class FungiService implements FungiContract
     {
         try {
 
-            return $this->repo->find($uuid);
+            return $this->repo->find($uuid)->load('occurrences');
         } catch (\Throwable $th) {
             throw $th;
         }
