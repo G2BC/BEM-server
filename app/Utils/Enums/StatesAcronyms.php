@@ -35,9 +35,27 @@ enum StatesAcronyms: string
     public static function getStateByAcronym(string $acr): string
     {
 
-        return collect(StatesAcronyms::cases())->first(function ($item) use ($acr) {
+        return collect(StatesAcronyms::cases())->first(function (StatesAcronyms $item) use ($acr) {
 
             return $item->name == $acr;
         })->value;
+    }
+
+    public static function searchForStateAc(string $placeString): StatesAcronyms|null
+    {
+
+        return collect(StatesAcronyms::cases())->first(function (StatesAcronyms $item) use ($placeString) {
+
+            return str_contains($placeString, $item->name);
+        });
+    }
+
+    public static function searchForState(string $placeString): StatesAcronyms|null
+    {
+
+        return collect(StatesAcronyms::cases())->first(function (StatesAcronyms $item) use ($placeString) {
+
+            return str_contains($placeString, $item->value);
+        });
     }
 }

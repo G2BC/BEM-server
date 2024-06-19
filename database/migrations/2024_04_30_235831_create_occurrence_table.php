@@ -15,14 +15,15 @@ return new class extends Migration
             $table->id();
             $table->uuid();
             $table->integer('inaturalist_taxa')->nullable();
-            $table->integer('specieslink_id')->nullable();
+            $table->string('specieslink_id')->nullable();
             $table->integer('type');
             $table->char('state_acronym', 2);
             $table->string('state_name', 255);
-            $table->string('biome', 255)->nullable();
+            $table->string('habitat', 255)->nullable();
             $table->string('literature_reference', 255)->nullable();
             $table->double('latitude', 10,8)->nullable();
             $table->double('longitude', 11,8)->nullable();
+            $table->boolean('curation')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });
