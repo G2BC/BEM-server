@@ -16,10 +16,11 @@ class OccurrenceController extends Controller
         $this->service = $service;
     }
 
-    public function getAll()
+    public function getAll(Request $curation)
     {
         try {
-            return $this->service->getAll();
+
+            return $this->service->getAll($curation->query('curation'));
         } catch (\Throwable $th) {
             throw $th;
         }

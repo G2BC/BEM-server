@@ -24,10 +24,15 @@ class OccurrenceService implements OccurrenceContract
         $this->fungiRepo = $fungiRepo;
     }
 
-    public function getAll(): Collection
+    public function getAll(?bool $curation): Collection
     {
         try {
-            return $this->repo->all();
+
+            if (is_null($curation)) {
+                return $this->repo->all();
+            } else {
+                return $this->repo->getByCuration($curation)->get();
+            }
         } catch (\Throwable $th) {
             throw $th;
         }

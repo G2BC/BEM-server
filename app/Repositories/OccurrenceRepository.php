@@ -11,4 +11,11 @@ class OccurrenceRepository extends BaseRepository
         $this->setModel($model);
         $this->setQuery($model->query());
     }
+
+    public function getByCuration(bool $curation)
+    {
+        $this->where('curation', $curation);
+
+        return $this;
+    }
 }

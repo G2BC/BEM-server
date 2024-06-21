@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 interface OccurrenceContract extends Contract
 {
-    public function getAll(): Collection;
+    public function getAll(bool $curation): Collection;
 
     public function create(string $fungiUuid, array $data): Occurrence;
 
