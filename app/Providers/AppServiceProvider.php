@@ -10,7 +10,8 @@ class AppServiceProvider extends ServiceProvider
     public $bindings =  [
         \App\Services\Contracts\FungiContract::class => \App\Services\FungiService::class,
         \App\Services\Contracts\AuthContract::class => \App\Services\AuthService::class,
-        \App\Services\Contracts\UserContract::class => \App\Services\UserService::class
+        \App\Services\Contracts\UserContract::class => \App\Services\UserService::class,
+        \App\Services\Contracts\OccurrenceContract::class => \App\Services\OccurrenceService::class
     ];
 
     /**
