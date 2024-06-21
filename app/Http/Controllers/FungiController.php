@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Console\Commands\UpdateOccurrences;
+use App\Http\Requests\CreateFungiRequest;
 use App\Http\Requests\ListFungiRequest;
+use App\Http\Requests\UpdateFungiRequest;
 use App\Services\Contracts\FungiContract;
-// use App\Services\FungiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Queue;
 
 class FungiController extends Controller
 {
@@ -91,9 +93,43 @@ class FungiController extends Controller
 
 
     public function updateObservations()
-    {   
+    {
         Artisan::queue(UpdateOccurrences::class);
 
-        return response()->json(['message'=> 'Atualização das observações iniciada']);
+        return response()->json(['message' => 'Atualização das observações iniciada']);
+    }
+
+    public function create(CreateFungiRequest $request)
+    {
+        try {
+            $data = $request->validated();
+
+            return $this->service->create($data);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function update(string $uuid, UpdateFungiRequest $request)
+    {
+        try {
+            $data = $request->validated();
+
+            return $this->service->update($uuid, $data);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function delete(string $uuid)
+    {
+        try {
+
+            $this->service->delete($uuid);
+
+            return response()->json(['message' => 'Espécie removida']);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 }
