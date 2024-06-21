@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\FungiController;
 use Illuminate\Support\Facades\Route;
 
 /*
