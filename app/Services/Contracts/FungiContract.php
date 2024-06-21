@@ -2,6 +2,7 @@
 
 namespace App\Services\Contracts;
 
+use App\Models\Fungi;
 use App\Services\Contracts\Contract;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as SupportCollection;
@@ -19,4 +20,10 @@ interface FungiContract extends Contract
     public function groupedByStateAndClass(): SupportCollection;
 
     public function getAll(): Collection;
+
+    public function create(array $data): Fungi;
+
+    public function update(string $uuid, array $data): Fungi;
+
+    public function delete(string $uuid): void;
 }

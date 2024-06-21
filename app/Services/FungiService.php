@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Fungi;
 use App\Repositories\FungiRepository;
 use App\Services\Contracts\FungiContract;
 use App\Utils\Enums\BemClassification;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
 
 class FungiService implements FungiContract
 {
@@ -121,6 +123,58 @@ class FungiService implements FungiContract
             });
 
             return $data;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function create(array $data): Fungi
+    {
+        try {
+            $data['uuid'] = Str::uuid();
+
+            return $this->repo->getModel()->create($data);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function update(string $uuid, array $data): Fungi
+    {
+        try {
+            $fungi = $this->repo->find($uuid);
+
+            $fungi->update([
+                'inaturalist_taxa' => $data['inaturalist_taxa'] ?? $fungi->inaturalist_taxa,
+                'bem' => $data['bem'] ?? $fungi->bem,
+                'kingdom' => $data['kingdom'] ?? $fungi->kingdom,
+                'phylum' => $data['phylum'] ?? $fungi->phylum,
+                'class' => $data['class'] ?? $fungi->class,
+                'order' => $data['order'] ?? $fungi->order,
+                'family' => $data['family'] ?? $fungi->family,
+                'genus' => $data['genus'] ?? $fungi->genus,
+                'specie' => $data['specie'] ?? $fungi->specie,
+                'scientific_name' => $data['scientific_name'] ?? $fungi->scientific_name,
+                'authors' => $data['authors'] ?? $fungi->authors,
+                'brazilian_type' => $data['brazilian_type'] ?? $fungi->brazilian_type,
+                'brazilian_type_synonym' => $data['brazilian_type_synonym'] ?? $fungi->brazilian_type_synonym,
+                'popular_name' => $data['popular_name'] ?? $fungi->popular_name,
+                'threatened' => $data['threatened'] ?? $fungi->threatened,
+                'description' => $data['description'] ?? $fungi->description
+            ]);
+
+            return $fungi;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    public function delete(string $uuid): void
+    {
+        try {
+            $fungi = $this->repo->find($uuid);
+
+            $fungi->delete();
         } catch (\Throwable $th) {
             throw $th;
         }
