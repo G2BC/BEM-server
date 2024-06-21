@@ -2,7 +2,7 @@
 Agrupados por recurso
 
 
-### Mushrooms
+### Fungi
 *   [Listar Todos](./fungi/getAll.md)
 *   [Consulta por UUID](./fungi/getByUuid.md)
 *   [Consulta por Taxonomia](./fungi/getByTaxonomy.md)
@@ -13,3 +13,8 @@ Agrupados por recurso
 
 ### Autenticação
 *   [Login](./auth/login.md)
+
+### Mushroom
+*   [Criar](./mushroom/create.md)
+*   [Atualizar](./mushroom/update.md)
+*   [Deletar](./mushroom/delete.md)
