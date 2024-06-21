@@ -33,5 +33,13 @@ Route::group(['middleware' => ['auth:api', 'check.user.type:Admin,Specialist']],
         Route::post('/create', 'FungiController@create');
         Route::patch('/{uuid}/update', 'FungiController@update');
         Route::delete('/{uuid}/delete', 'FungiController@delete');
+        Route::post('/{fungiUuid}/occurrence/create', 'OccurrenceController@create');
+    });
+
+    Route::group(['prefix' => 'occurrence'], function () {
+        Route::get('/', 'OccurrenceController@getAll');
+        Route::get('/{uuid}', 'OccurrenceController@getByUuid');
+        Route::patch('/{uuid}/update', 'OccurrenceController@update');
+        Route::delete('/{uuid}/delete', 'OccurrenceController@delete');
     });
 });
