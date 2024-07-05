@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Console\Commands\UpdateOccurrences;
 use App\Http\Requests\CreateFungiRequest;
 use App\Http\Requests\ListFungiRequest;
 use App\Http\Requests\UpdateFungiRequest;
+use App\Jobs\UpdateOccurrences;
 use App\Services\Contracts\FungiContract;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Queue;
 
 class FungiController extends Controller
 {
@@ -94,9 +91,13 @@ class FungiController extends Controller
 
     public function updateObservations()
     {
-        Artisan::queue(UpdateOccurrences::class);
+        try {
+            UpdateOccurrences::dispatchSync();
 
-        return response()->json(['message' => 'Atualização das observações iniciada']);
+            return response()->json(['message' => 'Atualização das observações iniciada']);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     public function create(CreateFungiRequest $request)
