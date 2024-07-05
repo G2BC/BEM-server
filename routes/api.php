@@ -24,16 +24,16 @@ Route::group(['prefix' => 'fungi'], function () {
     Route::get('/stateAc/{stateAc}', 'FungiController@getByStateAc');
     Route::get('/bem/{id}', 'FungiController@getByBem');
     Route::get('/mushroom/{uuid}', 'FungiController@getByUuid');
-    Route::get('/observations', 'FungiController@updateObservations');
 });
 
 Route::group(['middleware' => ['auth:api', 'check.user.type:Admin,Specialist']], function () {
 
     Route::group(['prefix' => 'mushroom'], function () {
         Route::post('/create', 'FungiController@create');
+        Route::get('/updateObservations', 'FungiController@updateObservations');
         Route::patch('/{uuid}/update', 'FungiController@update');
         Route::delete('/{uuid}/delete', 'FungiController@delete');
-        Route::post('/{fungiUuid}/occurrence/create', 'OccurrenceController@create');
+        Route::post('/{uuid}/occurrence/create', 'OccurrenceController@create');
     });
 
     Route::group(['prefix' => 'occurrence'], function () {

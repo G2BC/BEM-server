@@ -36,12 +36,12 @@ class OccurrenceController extends Controller
         }
     }
 
-    public function create(string $fungiUuid, CreateOccurrenceRequest $request)
+    public function create(string $uuid, CreateOccurrenceRequest $request)
     {
         try {
             $data = $request->validated();
 
-            return $this->service->create($fungiUuid, $data);
+            return $this->service->create($uuid, $data);
         } catch (\Throwable $th) {
             throw $th;
         }
