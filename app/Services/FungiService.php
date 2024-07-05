@@ -106,7 +106,10 @@ class FungiService implements FungiContract
 
             $data = $this->repo->groupedByStateAndClass()->get();
 
-            $data = $data->groupBy('state')->flatMap(function (SupportCollection $stateGroup, $state) {
+            $data = $data->groupBy('state')->filter(function ($values, $stateKey) {
+
+                return !empty(str_replace(' ', '', $stateKey));
+            })->flatMap(function (SupportCollection $stateGroup, $state) {
 
                 return [
                     $state => [
