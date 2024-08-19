@@ -37,4 +37,4 @@ Certifique de possuir [PHP 8.1](https://www.php.net/downloads.php) e [Composer](
 Certifique de possuir [Docker](https://docs.docker.com/get-docker/) e [Docker Compose](https://docs.docker.com/compose/install/)
 1. Clonar o repositório
 2. Acessar o diretório do projeto e executar o comando `docker compose up --build`
-3. Servidor estará disponivel na URL `http://localhost`
+3. Servidor estará disponivel na URL `http://localhost:80`

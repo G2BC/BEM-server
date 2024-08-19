@@ -28,6 +28,10 @@ RUN docker-php-ext-enable pdo_pgsql pgsql grpc exif gettext gd bz2 zip
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Set working directory
+COPY . /var/www
 WORKDIR /var/www
+
+RUN composer i
+RUN php artisan jwt:secret
 
 EXPOSE 9000

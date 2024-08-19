@@ -19,6 +19,7 @@ services:
             - '.:/var/www'
         networks:
             - backend
+        command: /bin/sh -c "php artisan migrate && php artisan app:register-fungi-occurrences && php-fpm"
         depends_on:
             pgsql:
                 condition: service_healthy
@@ -47,7 +48,7 @@ services:
             POSTGRES_USER: '${DB_USERNAME}'
             POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
         volumes:
-            - 'pgdata:/var/lib/postgresql/data'
+            - './pgdata:/var/lib/postgresql/data'
         networks:
             - backend
         healthcheck:
