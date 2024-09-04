@@ -4,6 +4,8 @@ Projeto Backend da equipe WebFungi da Universidade do Estado da Bahia (UNEB) vis
 
 Time: Pedro Benevides, Rafael Cruz, Uendel Lima, Dêivísson Gomes, Italo Cruz.
 
+Manutenção: Victor Bitencourt, Davi Barbosa, Adeonita Sousa
+
 # Desenvolvimento
 
 <h2 id="variaveis-ambiente">Variáveis de Ambiente</h2>
@@ -36,5 +38,9 @@ Certifique de possuir [PHP 8.1](https://www.php.net/downloads.php) e [Composer](
 ## Docker
 Certifique de possuir [Docker](https://docs.docker.com/get-docker/) e [Docker Compose](https://docs.docker.com/compose/install/)
 1. Clonar o repositório
+
+> [!IMPORTANT]
+> Não esqueça de renomear o arquivo `RENAME_TO_DOTENV.md` para `.env`
+
 2. Acessar o diretório do projeto e executar o comando `docker compose up --build`
 3. Servidor estará disponivel na URL `http://localhost:80`
