@@ -31,6 +31,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 COPY . /var/www
 WORKDIR /var/www
 
+RUN chmod -R 777 storage/
+
 RUN composer i
 RUN php artisan jwt:secret
 

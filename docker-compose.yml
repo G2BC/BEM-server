@@ -19,11 +19,11 @@ services:
             - '.:/var/www'
         networks:
             - backend
-        command: /bin/sh -c "php artisan migrate && php artisan app:register-fungi-occurrences && php-fpm"
+        command: /bin/sh -c "composer i && php artisan migrate && php artisan app:register-fungi-occurrences && php-fpm"
         depends_on:
             pgsql:
                 condition: service_healthy
-    
+
     webserver:
         image: nginx:alpine
         container_name: nginx-bem-server
