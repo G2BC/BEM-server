@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Utils\Enums;
+use App\Utils\States;
+
 
 enum StatesAcronyms: string
 {
@@ -57,5 +59,20 @@ enum StatesAcronyms: string
 
             return str_contains($placeString, $item->value);
         });
+    }
+
+    public static function getGeolocalizationByAcronyms($acronym): array{
+        $statesGeolacalization = States::getGeolocalization();
+
+        $stateGeolacalization = $statesGeolacalization[$acronym];
+
+        if(is_null($stateGeolacalization)) {
+            throw new \Exception("Estado $acronym não encontrado");
+        }
+
+        return [
+            "latitude" => $stateGeolacalization["latitude"],
+            "longitude" => $stateGeolacalization["longitude"]
+        ];
     }
 }

@@ -106,22 +106,28 @@ class RegisterFungiOccurences extends Command
                         $statesAcr = explode(',', ($occurrence[1]));
 
                         foreach ($statesAcr as $acr) {
+                            $formmatedAcr = strtoupper(trim($acr));
 
-                            if (Str::length(trim($acr)) == 2) {
+                            if (Str::length($acr) == 2) {
+                                $stateName = StatesAcronyms::getStateByAcronym($formmatedAcr);
+                                $geolocalization = StatesAcronyms::getGeolocalizationByAcronyms($formmatedAcr);
+                                $latitude = $geolocalization['latitude'];
+                                $longitude = $geolocalization['longitude'];
+
                                 $occurrence = Occurrence::create(
-                                    [
-                                        'uuid' => Str::uuid(),
-                                        'inaturalist_taxa' => null,
-                                        'specieslink_id' => null,
-                                        'type' => is_null($fungiRow[8]) ? null : OccurrenceTypes::Literature->value,
-                                        'state_acronym' => strtoupper(trim($acr)),
-                                        'state_name' => StatesAcronyms::getStateByAcronym(strtoupper(trim($acr))),
-                                        'habitat' => trim($occurrence[2]),
-                                        'literature_reference' => null,
-                                        'latitude' => null,
-                                        'longitude' => null,
-                                        'curation' => true
-                                    ]
+                                   [
+                                    'uuid' => Str::uuid(),
+                                    'inaturalist_taxa' => null,
+                                    'specieslink_id' => null,
+                                    'type' => is_null($fungiRow[8]) ? null : OccurrenceTypes::Literature->value,
+                                    'state_acronym' => strtoupper(trim($acr)),
+                                    'state_name' => $stateName,
+                                    'habitat' => trim($occurrence[2]),
+                                    'literature_reference' => null,
+                                    'latitude' => $latitude,
+                                    'longitude' => $longitude,
+                                    'curation' => true
+                                   ]
                                 );
 
                                 $occurrencesIds->add($occurrence->id);
