@@ -184,4 +184,24 @@ class FungiRepository extends BaseRepository
 
         return $this;
     }
+
+    public function getBrasilianTypeAndBrasilianTypeSynomyn()
+    {
+        return $this
+            ->where('brazilian_type', 'T')
+            ->orWhere('brazilian_type_synonym', 'TS')
+            ->get();
+    }
+
+    public function getEdibleSpecies()
+    {
+        return Fungi::where('bem', '>=', 1)
+            ->orWhere('bem', '<=', 10)
+            ->get();
+    }
+
+    public function getThreatenedSpecies()
+    {   
+        return Fungi::where('threatened', '>=', 3)->get();
+    }
 }
