@@ -44,3 +44,9 @@ Certifique de possuir [Docker](https://docs.docker.com/get-docker/) e [Docker Co
 
 2. Acessar o diretório do projeto e executar o comando `docker compose up --build`
 3. Servidor estará disponivel na URL `http://localhost:80`
+2. Acessar o diretório do projeto e executar o comando `docker compose up --build` ou `docker-compose up --build`
+3. Servidor estará disponivel na URL `http://localhost:80/api`
+
+## Documentação
+
+Consulte a documentação com os endpoints da api em `/docs`

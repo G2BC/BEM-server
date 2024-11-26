@@ -43,3 +43,7 @@ Route::group(['middleware' => ['auth:api', 'check.user.type:Admin,Specialist']],
         Route::delete('/{uuid}/delete', 'OccurrenceController@delete');
     });
 });
+
+Route::group(['prefix' => 'infos'], function () {
+    Route::get('/sub_menu', 'GeneralInfoController@getGeneralInfo');
+});
