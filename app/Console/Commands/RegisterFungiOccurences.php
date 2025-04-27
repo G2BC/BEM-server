@@ -67,10 +67,10 @@ class RegisterFungiOccurences extends Command
                     $genus = Str::lower(trim($fungiRow[6]));
                     $specie = trim($fungiRow[7]);
 
-                    $response = $client->get("https://apiv3.iucnredlist.org/api/v3/species/{$genus}%20{$specie}?token={$apiKey}");
-                    $data = json_decode($response->getBody()->getContents(), true);
+                    // $response = $client->get("https://apiv3.iucnredlist.org/api/v3/species/{$genus}%20{$specie}?token={$apiKey}");
+                    // $data = json_decode($response->getBody()->getContents(), true);
 
-                    $iucnData = array_key_exists('result', $data) ? collect($data['result']) : collect();
+                    //$iucnData = array_key_exists('result', $data) ? collect($data['result']) : collect();
 
                     DB::beginTransaction();
                     $fungiModel = Fungi::updateOrCreate(
@@ -91,8 +91,8 @@ class RegisterFungiOccurences extends Command
                             'inaturalist_taxa' => $fungiRow[11],
                             'popular_name' => trim($fungiRow[12]),
                             'bem' => BemClassification::getValueByName(trim($fungiRow[13])),
-                            'threatened' => $iucnData->isEmpty() ? RedListClassification::NE->value : RedListClassification::getValueByName($iucnData->shift()['category']),
-                            'description' => null
+                            //'threatened' => $iucnData->isEmpty() ? RedListClassification::NE->value : RedListClassification::getValueByName($iucnData->shift()['category']),
+                            'description' => null,
                         ]
                     );
 
@@ -126,7 +126,7 @@ class RegisterFungiOccurences extends Command
                                     'literature_reference' => null,
                                     'latitude' => $latitude,
                                     'longitude' => $longitude,
-                                    'curation' => true
+                                    'curation' => true,
                                    ]
                                 );
 
