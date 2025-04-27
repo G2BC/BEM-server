@@ -57,7 +57,8 @@ class Occurrence extends Model
 		'literature_reference',
 		'latitude',
 		'longitude',
-		'curation'
+		'curation',
+		'dna'
 	];
 
 	protected $guarded = [
