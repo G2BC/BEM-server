@@ -92,6 +92,7 @@ class RegisterFungiOccurences extends Command
                             'popular_name' => trim($fungiRow[12]),
                             'bem' => BemClassification::getValueByName(trim($fungiRow[13])),
                             //'threatened' => $iucnData->isEmpty() ? RedListClassification::NE->value : RedListClassification::getValueByName($iucnData->shift()['category']),
+                            'threatened' => RedListClassification::NE->value,
                             'description' => null,
                         ]
                     );
