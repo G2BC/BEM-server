@@ -17,8 +17,7 @@ enum RedListClassification: int
 
     public static function getValueByName(string $bem): int
     {
-
-        return collect(RedListClassification::cases())->first(function ($item) use ($bem) {
+        return collect(self::cases())->first(function ($item) use ($bem) {
             return $item->name == $bem;
         })->value;
     }

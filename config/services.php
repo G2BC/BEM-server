@@ -31,4 +31,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'iucn' => [
+        'key' => env('IUCN_API_KEY'),
+        'endpoint' => env('IUCN_API_ENDPOINT'),
+    ],
 ];
