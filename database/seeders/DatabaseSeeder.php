@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use Database\Seeders\Update\CopyTaxonDataToTaxonomies;
+use Database\Seeders\Update\UpdatedTaxonomy;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,5 +21,8 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+        $this->call([
+            CopyTaxonDataToTaxonomies::class,
+        ]);
     }
 }
