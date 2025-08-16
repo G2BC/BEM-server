@@ -10,11 +10,13 @@ use App\Utils\Enums\BemClassification;
 use App\Utils\Enums\RedListClassification;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Fungi
- * 
+ *
  * @property int $id
  * @property uuid $uuid
  * @property int|null $inaturalist_taxa
@@ -41,45 +43,50 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Fungi extends Model
 {
-	use SoftDeletes;
-	protected $table = 'fungi';
+    use SoftDeletes;
+    protected $table = 'fungi';
 
-	protected $casts = [
-		'uuid' => 'string',
-		'inaturalist_taxa' => 'int',
-		'bem' => BemClassification::class,
-		'threatened' => RedListClassification::class
-	];
+    protected $casts = [
+        'uuid' => 'string',
+        'inaturalist_taxa' => 'int',
+        'bem' => BemClassification::class,
+        'threatened' => RedListClassification::class
+    ];
 
-	protected $fillable = [
-		'uuid',
-		'inaturalist_taxa',
-		'bem',
-		'kingdom',
-		'phylum',
-		'class',
-		'order',
-		'family',
-		'genus',
-		'specie',
-		'scientific_name',
-		'authors',
-		'brazilian_type',
-		'brazilian_type_synonym',
-		'popular_name',
-		'threatened',
-		'description'
-	];
+    protected $fillable = [
+        'uuid',
+        'inaturalist_taxa',
+        'bem',
+        'kingdom',
+        'phylum',
+        'class',
+        'order',
+        'family',
+        'genus',
+        'specie',
+        'scientific_name',
+        'authors',
+        'brazilian_type',
+        'brazilian_type_synonym',
+        'popular_name',
+        'threatened',
+        'description'
+    ];
 
-	protected $guarded = [
-		'id',
-		'created_at',
-		'updated_at',
-		'deleted_at'
-	];
+    protected $guarded = [
+        'id',
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
 
-	public function occurrences()
-	{
-		return $this->belongsToMany(Occurrence::class)->using(FungiOccurrence::class);
-	}
+    public function occurrences()
+    {
+        return $this->belongsToMany(Occurrence::class)->using(FungiOccurrence::class);
+    }
+
+    public function taxonomies(): HasMany
+    {
+        return $this->HasMany(Taxonomy::class);
+    }
 }

@@ -26,4 +26,6 @@ interface FungiContract extends Contract
     public function update(string $uuid, array $data): Fungi;
 
     public function delete(string $uuid): void;
+
+    public function findOrFail(int $id): Fungi;
 }

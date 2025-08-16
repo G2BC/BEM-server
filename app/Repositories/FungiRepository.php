@@ -6,10 +6,24 @@ use App\Models\Fungi;
 
 class FungiRepository extends BaseRepository
 {
-    public function __construct(Fungi $model)
+    public function __construct(private Fungi $model)
     {
         $this->setModel($model);
         $this->setQuery($model->query());
+    }
+
+    public function create (array $data): Fungi
+    {
+        $fungi = $this->model->newInstance();
+        $fungi->fill($data);
+        $fungi->save();
+
+        return $fungi;
+    }
+
+    public function getAll()
+    {
+        return $this->model->with('taxonomies')->get();
     }
 
     public function specieLike(string $specie, string $boolOperator = 'and')
@@ -201,7 +215,12 @@ class FungiRepository extends BaseRepository
     }
 
     public function getThreatenedSpecies()
-    {   
+    {
         return Fungi::where('threatened', '>=', 3)->get();
+    }
+
+    public function findOrFail(int $id): Fungi
+    {
+        return $this->model->with('taxonomies')->findOrFail($id);
     }
 }

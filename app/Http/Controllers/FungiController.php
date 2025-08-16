@@ -7,15 +7,11 @@ use App\Http\Requests\ListFungiRequest;
 use App\Http\Requests\UpdateFungiRequest;
 use App\Jobs\UpdateOccurrences;
 use App\Services\Contracts\FungiContract;
+use Illuminate\Http\Request;
 
 class FungiController extends Controller
 {
-    private FungiContract $service;
-
-    public function __construct(FungiContract $service)
-    {
-        $this->service = $service;
-    }
+    public function __construct(private FungiContract $service) {}
 
     public function getByTaxonomy(ListFungiRequest $request)
     {
@@ -88,6 +84,10 @@ class FungiController extends Controller
         }
     }
 
+    public function show(int $id)
+    {
+        return $this->service->findOrFail($id);
+    }
 
     public function updateObservations()
     {
@@ -100,12 +100,12 @@ class FungiController extends Controller
         }
     }
 
-    public function create(CreateFungiRequest $request)
+    public function create(Request $request)
     {
         try {
-            $data = $request->validated();
+            // $data = $request->validated();
 
-            return $this->service->create($data);
+            return $this->service->create($request->all());
         } catch (\Throwable $th) {
             throw $th;
         }
