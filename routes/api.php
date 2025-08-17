@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FungiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,7 +19,9 @@ Route::group(['prefix' => 'auth'], function () {
 });
 
 Route::group(['prefix' => 'fungi'], function () {
+    Route::post('/', [FungiController::class, 'create'])->name('fungi.create');
     Route::get('/', 'FungiController@getAll');
+    Route::get('/{id}', [FungiController::class, 'show'])->name('fungi.show');
     Route::get('/taxonomy', 'FungiController@getByTaxonomy');
     Route::get('/heatmap', 'FungiController@heatMap');
     Route::get('/stateAc/{stateAc}', 'FungiController@getByStateAc');

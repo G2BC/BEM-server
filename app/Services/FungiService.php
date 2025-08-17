@@ -2,8 +2,11 @@
 
 namespace App\Services;
 
+use App\Enum\FungiTaxon\TaxonType;
 use App\Models\Fungi;
+use App\Models\Taxonomy;
 use App\Repositories\FungiRepository;
+use App\Repositories\Taxonomy\TaxonomyRepository;
 use App\Services\Contracts\FungiContract;
 use App\Utils\Enums\BemClassification;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,17 +17,16 @@ use Illuminate\Support\Str;
 
 class FungiService implements FungiContract
 {
-    private FungiRepository $repo;
 
-    public function __construct(FungiRepository $repo)
-    {
-        $this->repo = $repo;
-    }
+    public function __construct(
+        private FungiRepository $repo,
+        private TaxonomyRepository $taxonomy
+    ) {}
 
     public function getAll(): Collection
     {
         try {
-            return $this->repo->all();
+            return $this->repo->getAll();
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -135,8 +137,12 @@ class FungiService implements FungiContract
     {
         try {
             $data['uuid'] = Str::uuid();
+            $hasTaxonomy = $this->taxonomy->firstByScientificName($data['scientific_name']);
+            $fungi = $hasTaxonomy->fungi ?? $this->repo->create($data);
 
-            return $this->repo->getModel()->create($data);
+            $this->taxonomy->create([...$data, 'fungi_id' => $fungi->id]);
+
+            return $fungi->load('taxonomies');
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -181,5 +187,10 @@ class FungiService implements FungiContract
         } catch (\Throwable $th) {
             throw $th;
         }
+    }
+
+    public function findOrFail(int $id): Fungi
+    {
+        return $this->repo->findOrFail($id);
     }
 }
